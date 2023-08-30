@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{9C8E2B0A-872A-44A3-B633-703A271AF31F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CulturalSurvey", "CulturalSurvey\CulturalSurvey.csproj", "{634D1BAC-16A1-47CC-8398-41A66122B57B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9C8E2B0A-872A-44A3-B633-703A271AF31F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C8E2B0A-872A-44A3-B633-703A271AF31F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C8E2B0A-872A-44A3-B633-703A271AF31F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C8E2B0A-872A-44A3-B633-703A271AF31F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{634D1BAC-16A1-47CC-8398-41A66122B57B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{634D1BAC-16A1-47CC-8398-41A66122B57B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{634D1BAC-16A1-47CC-8398-41A66122B57B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{634D1BAC-16A1-47CC-8398-41A66122B57B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7A3C7B5D-2654-4D7C-9A5A-F5F153D63E0A}
+	EndGlobalSection
+EndGlobal

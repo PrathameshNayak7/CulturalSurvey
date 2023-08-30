@@ -1,0 +1,558 @@
+﻿@model CulturaSurvey.ViewModel.vmCashPayment
+@{
+    ViewBag.Title = "Receivable";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+<style>
+    #btnBack, #btnSave {
+        line-height: 17px;
+        display: none;
+    }
+</style>
+
+@Html.Partial("_Menu")
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label>Select Form</label>
+                    <select id="Event" class="form-control"></select>
+                </div>
+                <div class="col-md-12" id="vmCluster_Head">
+                    <label>Select Head</label>
+                    <select id="Cluster_Head" class="form-control"></select>
+                </div>
+                <div class="col-md-12">
+                    <label>Year</label>
+                    <select id="Verification_Year" class="form-control">
+                        <option value="2023-2024">2023-2024 </option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Payment</label>
+                    <select id="Payment_Status" class="form-control">
+                        @*<option value="11">[All]</option>*@
+                        <option value="CASH">CASH</option>
+                        @*<option value="0" style="display:none;">Un-Paid</option>*@
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Institute</label>
+                    <select id="Verification_Institute" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Course</label>
+                    <select id="Verification_Course" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Search</label>
+                    <input type="text" class="form-control" id="txtSearch" name="Search" placeholder="Search by name / mobile / state / district / etc...." autocomplete="off" />
+
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel z-depth-1">
+                        <div class="panel-body text-center">
+                            <span>Total: </span><b><label id="lblDisplayCount" class="color14"></label></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-9">
+
+                    </div>                    
+                    <div class=" col-md-3 text-right">
+                        <div class="col-md-6">
+                            <a id="btnSave" class="btn btn-success">SAVE</a>
+                        </div>
+                        <div class="col-md-6">
+                            <a class="btn btn-primary" id="btnBack">Back</a>
+                        </div>                       
+                        
+                    </div>
+
+                </div>
+            </div>
+
+
+            <br />
+            <div class="row form-group">
+                <div class="col-md-12" id="CashAmtData" style="overflow:auto;min-height:150px;max-height:550px; display:none">
+                    <table class="table table-bordered" id="tblCashListing">
+                        <thead>
+                            <tr>
+                                <th>Slno</th>
+                                <th>Name</th>
+                                <th>Total College</th>
+                                <th>Total Reg</th>
+                                <th>Pending Student Count</th>
+                                <th>Total Paid Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" id="CashStudentData" style="overflow: auto;min-height: 150px;max-height: 550px;display: none;">
+                    <table class="table table-bordered" id="tblCashDetails">
+                        <thead>
+                            <tr>
+                                <th>Slno</th>
+                                <th>First Name</th>
+                                <th>Father Name</th>
+                                <th>Last Name</th>
+                                <th>College Name</th>
+                                <th>Payment Date</th>
+                                <th>Contact No.</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th><input id="selectAllStudent" type="checkbox" /></th>
+                                <th>Reject</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" style="display:none" id="vmtblLess">
+                    <div class="container center-block" style="margin-top:10%;">
+                        <div class="panel" style="background-color: lemonchiffon;">
+                            <div class="panel-body">
+                                <h2 class="text-center">
+                                    Sorry... 😐 there is no data found.
+
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" style="display:none" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Reject Remark</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input class="form-control" placeholder="Rejection Rermark...." id="Student_RejectID"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="btnReject" data-dismiss="modal" class="btn btn-primary">Reject</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        LoadCamuInstituteVerification();
+        LoadCamuClusterHead();
+        LoadCamuProgramVerification();
+        LoadEventMaster();
+        LoadCashDetails();
+    });
+
+    function LoadEventMaster() {
+        $("#Event").empty();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuEventMaster',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        if (obj.status == 'There are no forms') {
+                            $("#Event").append('<option value="">[Select]</option>');
+
+                        }
+                        else {
+                            $("#Event").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                        }
+
+                    });
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    $("#Event").append('<option value="">[Select]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#Event").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                    });
+
+                    $('#loader').hide();
+                }
+                else {
+                    error("Event forms not configured", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Events" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    function LoadCamuClusterHead() {
+        $("#Cluster_Head").empty();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/CashReg/GetCamuClusterHead',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Cluster_Head").append('<option value="' + obj.User_Id + '">' + obj.UserName + '</option>');
+                    });
+                }
+                else if (data.length > 1) {
+                    $("#Cluster_Head").append('<option value="0">[ALL]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#Cluster_Head").append('<option value="' + obj.User_Id + '">' + obj.UserName + '</option>');
+                    });
+                }
+                else {
+                    error("No Data", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Cluster Head" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    function LoadCamuInstituteVerification() {
+        $("#Verification_Institute").empty();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuInstitutionsVerification',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    LoadCamuProgramVerification();
+
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    /*   $("#Verification_Institute").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else {
+                    error("Configure the Institute", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Institute" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    function LoadCamuProgramVerification() {
+        $("#Verification_Course").empty();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuProgramVerification',
+            data: { Institute_Id: $("#Verification_Institute").val() },
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    /*  $("#Verification_Course").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else {
+                    error("Configure the Courses", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Courses" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    function LoadCashDetails() {
+        $("#tblCashListing tbody").empty();
+        $("#tblCashListing tbody").html("");
+        $("#CashAmtData").show();
+        $("#CashStudentData").hide();
+        $("#btnBack").hide();
+        $("#vmtblLess").hide();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/CashReg/LoadCashReceivable',
+            data: { Event_ID: $("#Event").val(), Cluster_Head: $("#Cluster_Head").val(), Verification_Year: $("#Verification_Year").val(), Payment_Status: $("#Payment_Status").val(), Verification_Institute: $("#Verification_Institute").val(), Verification_Course: $("#Verification_Course").val() },
+            success: function (data) {
+                if (data.length > 0) {
+                    $("#lblDisplayCount").html(data.length);
+                    $.each(data, function (i, obj) {
+                        $("#tblCashListing tbody").append('<tr onclick="CashDetails(' + obj.User_Id + ')"><td>' + (i + 1) + '</td><td>' + obj.UserName + '</td><td>' + obj.Total_College + '</td><td>' + obj.Total_Reg + '</td><td>' + obj.Pending_Std_Count + '</td><td>' + obj.Total_Paid_Amount + '</td></tr>');
+                    });
+                }
+                else {
+                    $("#lblDisplayCount").html("0");
+                    $("#CashAmtData").hide();
+                    $("#vmtblLess").show();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Cash Details Table" + ex.Message, "topCenter");
+            }
+        });
+
+    }
+
+
+    $("#btnBack").click(function () {
+        $("#CashStudentData").hide();
+        $("#CashAmtData").show();
+        $("#btnBack").hide();
+        $("#btnSave").hide();
+        $("#vmtblLess").hide();
+    });
+
+    $("#Event").change(function () {
+        LoadCashDetails();
+    });
+    $("#Cluster_Head").change(function () {
+        LoadCashDetails();
+    });
+    $("#Verification_Year").change(function () {
+        LoadCashDetails();
+    });
+    $("#Payment_Status").change(function () {
+        LoadCashDetails();
+    });
+    $("#Verification_Institute").change(function () {
+        LoadCashDetails();
+    });
+    $("#Verification_Course").change(function () {
+        LoadCashDetails();
+    });
+
+    var temp_UserId; 
+    function CashDetails(User_Id) {
+        temp_UserId = User_Id;
+        localStorage.setItem('temp_UserId', temp_UserId);
+
+        $("#tblCashDetails tbody").empty();
+        $("#tblCashDetails tbody").html("");
+        $("#CashAmtData").hide();
+        $("#CashStudentData").show();
+        $("#btnBack").show();
+        if ($("#Cluster_Head").val() == 0) {
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'GET',
+                dataType: 'json',
+                url: '/CashReg/LoadCashDetails',
+                data: { Event_ID: $("#Event").val(), Cluster_Head: User_Id, Verification_Year: $("#Verification_Year").val(), Payment_Status: $("#Payment_Status").val(), Verification_Institute: $("#Verification_Institute").val(), Verification_Course: $("#Verification_Course").val() },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $("#lblDisplayCount").html(data.length);
+                        $.each(data, function (i, obj) {
+                            $("#tblCashDetails tbody").append('<tr><td>' + (i + 1) + '</td><td>' + obj.First_Name + '</td><td>' + obj.Father_Name + '</td><td>' + obj.Last_Name + '</td><td>' + obj.College_Name + '</td><td>' + obj.Payment_Date + '</td><td>' + obj.Contact_No + '</td><td>' + obj.Email_Id + '</td><td>' + obj.Gender + '</td><td><input class="student-checkbox" value="' + obj.Registration_Id + '" type="checkbox" /></td><td><a data-toggle="modal" data-target="#exampleModal" onclick="RejectFunction(' + obj.Registration_Id + ')"><i  class="fa-solid fa-cancel fa-2xl text-danger"></i></a></td></tr>');
+                        });
+                    }
+                    else {
+                        $("#lblDisplayCount").html("0");
+                        $("#CashAmtData").hide();
+                        $("#CashStudentData").hide();
+                        $("#vmtblLess").show();
+                    }
+                },
+                error: function (ex) {
+                    error("Failed to Cash Details Table" + ex.Message, "topCenter");
+                }
+            });
+        }
+        else {
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'GET',
+                dataType: 'json',
+                url: '/CashReg/LoadCashDetails',
+                data: { Event_ID: $("#Event").val(), Cluster_Head: $("#Cluster_Head").val(), Verification_Year: $("#Verification_Year").val(), Payment_Status: $("#Payment_Status").val(), Verification_Institute: $("#Verification_Institute").val(), Verification_Course: $("#Verification_Course").val() },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $.each(data, function (i, obj) {
+                            $("#tblCashDetails tbody").append('<tr><td>' + (i + 1) + '</td><td>' + obj.First_Name + '</td><td>' + obj.Father_Name + '</td><td>' + obj.Last_Name + '</td><td>' + obj.College_Name + '</td><td>' + obj.Payment_Date + '</td><td>' + obj.Contact_No + '</td><td>' + obj.Email_Id + '</td><td>' + obj.Gender + '</td><td><input class="student-checkbox" value="' + obj.Registration_Id + '" type="checkbox" /></td><td><a data-toggle="modal" data-target="#exampleModal" onclick="RejectFunction(' + obj.Registration_Id + ')"><i  class="fa-solid fa-cancel fa-2xl text-danger"></i></a></td></tr>');
+                        });
+                    }
+                    else {
+                        $("#CashAmtData").hide();
+                        $("#CashStudentData").hide();
+                        $("#vmtblLess").show();
+                    }
+                },
+                error: function (ex) {
+                    error("Failed to Cash Details Table" + ex.Message, "topCenter");
+                }
+            });
+        }
+
+    }
+
+
+    var selectedStudentData = [];
+
+    $(document).on('change', '#selectAllStudent', function () {
+        var isChecked = $(this).prop('checked');
+        $('.student-checkbox').prop('checked', isChecked);
+        if (isChecked) {
+            selectedStudentData = $('.student-checkbox').map(function () {
+                return { Registration_Id: $(this).val() };
+            }).get();
+        } else {
+            selectedStudentData = [];
+        }
+
+        if (selectedStudentData.length > 0) {
+            $('#btnSave').show();
+        } else {
+            $('#btnSave').hide();
+        }
+    });
+
+    $(document).on('change', '.student-checkbox', function () {
+        var isChecked = $(this).val();
+        if ($(this).prop('checked')) {
+            selectedStudentData.push({ Registration_Id: isChecked });
+        } else {
+            selectedStudentData = selectedStudentData.filter(function (students) {
+                return students.Registration_Id !== isChecked;
+            });
+        }
+
+        var allChecked = $('.student-checkbox:checked').length === $('.student-checkbox').length;
+        $('#selectAllStudent').prop('checked', allChecked);
+
+        if (selectedStudentData.length > 0) {
+            $('#btnSave').show();
+        } else {
+            $('#btnSave').hide();
+        }
+    });
+
+
+
+    $("#btnSave").click(function () {
+        if (selectedStudentData.length > 0) {
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'POST',
+                url: '/CashReg/UpdateCashDetails',
+                data: { SelectedValues: selectedStudentData },
+                success: function (data) {
+                    if (data.status = "success") {
+                        success("Data Updated Successfully", "topCenter");
+                        var User_Id = localStorage.getItem('temp_UserId');
+                        CashDetails(User_Id);
+                        $("#btnSave").hide();
+                        selectedStudentData = [];
+                    }
+                },
+                error: function (ex) {
+                    error("Failed to Save Cash Details" + ex.Message, "topCenter");
+                }
+            });
+        }
+        else {            
+            error("Please Select The Students", "topCenter");
+        }
+    });
+
+    var tempRejectID; 
+    function RejectFunction(Registration_Id) {        
+        tempRejectID = Registration_Id;
+        localStorage.setItem('tempRejectID', tempRejectID);
+        $("exampleModal").show();
+    }
+
+
+    $("#btnReject").click(function () {
+        var savedID = localStorage.getItem('tempRejectID');
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            url: '/CashReg/UpdateCashRejectStatus',
+            data: { savedID: savedID, rejectRemark: $("#Student_RejectID").val()},
+            success: function (data) {
+                if (data.status = "success") {
+                    success("Student Rejected Successfully", "topCenter");
+                    localStorage.removeItem('tempRejectID');
+                    var User_Id = localStorage.getItem('temp_UserId');
+                    CashDetails(User_Id);                    
+                }
+            },
+            error: function (ex) {
+                error("Failed to Save Cash Details" + ex.Message, "topCenter");
+            }
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+    $("#txtSearch").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tblCashListing tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+        $("#tblCashDetails tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+</script>

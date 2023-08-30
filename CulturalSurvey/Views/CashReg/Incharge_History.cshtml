@@ -1,0 +1,364 @@
+﻿
+@{
+    ViewBag.Title = "Incharge_History";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+@Html.Partial("_Menu")
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <a class="btn btn-success" id="btnDownload">Download</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <div class="card" style="background-color:lightblue">
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Total Collected Amount</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label id="Collected_Amt"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card" style="background-color:lightgreen">
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Submitted Amount</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label id="Submitted_Amt"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body text-center" style="background-color:orangered">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>Pending Amount</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label id="Pending_Amt"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card m-t-25">
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-3">
+                        <input id="hdn_Id" value="0" style="display:none" />
+                        <label>Pay Amount*</label>
+                        <input class="form-control" id="Pay_AmtID" type="text" />
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Payment Type*</label>
+                        <select class="form-control" id="Pay_TypeID">
+                            <option value="0">SELECT</option>
+                            <option value="CASH">CASH</option>
+                            <option value="UPI">UPI</option>
+                            <option value="BAnk Transfer">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label>Payment Remarks*</label>
+                        <input id="Pay_RemarksID" class="form-control" />
+                    </div>
+
+                    <div class="col-md-1">
+                        <label></label>
+                        <a class="btn btn-success form-control" id="btnSubmit">ADD</a>
+                    </div>
+                    <div class="col-md-2">
+                        <label></label>
+                        <a class="btn btn-primary form-control" id="btnClear">CLEAR</a>
+                    </div>
+                </div>
+
+            </div>
+            <br />
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12 m-t-30">
+            <div class="col-md-12" id="tblPayment_History" style="overflow: auto; height: 380px; overflow-y: scroll; display: none">
+                <table class="table table-bordered" id="tblSubmission_History">
+                    <thead>
+                        <tr>
+                            <th>Sl No</th>
+                            <th>Submitted Amount</th>
+                            <th>Payment Mode</th>
+                            <th>Payment Remarks</th>
+                            <th>Paid Date</th>
+                            <th>Account Status</th>
+                            <th>Account Confirm Date</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        Load_Submission_History();
+        LoadInchargeHistory();
+        localStorage.removeItem('temp_StoredAmt');
+    });
+
+    function LoadInchargeHistory() {
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'GET',
+            dataType: 'json',
+            url: '/CashReg/Load_InchargeHistory',
+            data: {},
+            success: function (data) {
+                $("#Collected_Amt").html('')
+                $("#Submitted_Amt").html('')
+                $("#Pending_Amt").html('')
+                if (data.length > 0) {
+                    $("#Collected_Amt").append(data[0].Collected_Amount)
+                    $("#Submitted_Amt").append(data[0].Submitted_Amount)
+                    $("#Pending_Amt").append(data[0].Pending_Amount)
+                }
+                else {
+                    error("Failed to Load Summary", "topCenter");
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Summary" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    function Load_Submission_History() {
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'GET',
+            dataType: 'json',
+            url: '/CashReg/Load_SubmissionDetails',
+            data: {},
+            success: function (data) {
+                if (data.length > 0) {
+                    $("#tblSubmission_History tbody").html("");
+                    $("#tblPayment_History").show();
+                    $.each(data, function (i, obj) {
+                        if (obj.isAccountStatus == 1) {
+                            var Ac_Status = "Confirmed";
+                        }
+                        else {
+                            var Ac_Status = "Pending";
+                        }
+                        $("#tblSubmission_History tbody").append('<tr onclick="Edit_Amount(' + obj.Id + ')"><td>' + (i + 1) + '</td><td>' + obj.Amount + '</td><td>' + obj.Payment_Type + '</td><td>' + obj.Remarks + '</td><td>' + obj.Created_Date + '</td><td>' + Ac_Status + '</td><td>' + obj.AccountConfirm_Date + '</td></tr>');
+                    });
+                }
+                else {
+                    $("#tblPayment_History").hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Data" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    var temp_Amt;
+    function Edit_Amount(Id) {
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'GET',
+            dataType: 'json',
+            url: '/CashReg/Edit_Submitted_Amt',
+            data: { Id: Id },
+            success: function (data) {
+                if (data.length > 0) {
+                    $("#hdn_Id").val(data[0].Id);
+                    $("#Pay_AmtID").val(data[0].Amount);                    
+                    temp_Amt = localStorage.setItem('temp_StoredAmt', data[0].Amount);
+                    $('#Pay_TypeID option[value="' + data[0].Payment_Type + '"]').prop('selected', true);
+                    $("#Pay_RemarksID").val(data[0].Remarks);
+                }
+                else {
+                    error("Account Team Has Been Confirmed...!!","topCenter");
+                }
+            }
+        })
+    }
+
+    $("#btnSubmit").click(function () {
+        if ($("#Pay_AmtID").val() != "" && $("#Pay_TypeID").val() != 0 && $("#Pay_RemarksID").val() != "") {
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                url: '/CashReg/Amount_Submission',
+                data: { Id: $("#hdn_Id").val(), Pay_Amount: $("#Pay_AmtID").val(), Payment_Type: $("#Pay_TypeID").val(), Payment_Remark: $("#Pay_RemarksID").val() },
+                success: function (data) {
+                    if (data.status = 1) {
+                        success("Data Submission Successfully....!!", "topCenter");
+                        $("#hdn_Id").val('0');
+                        $("#Pay_AmtID").val('');
+                        $('#Pay_TypeID option[value="0"]').prop('selected', true);
+                        $("#Pay_RemarksID").val('');
+                        Load_Submission_History();
+                        LoadInchargeHistory();
+                    }
+                    else {
+                        error("Data Submission Failed....!!", "topCenter");
+                    }
+
+                },
+                error: function (ex) {
+                    error("Failed to Submit Data" + ex.Message, "topCenter");
+                }
+            });
+        }
+        else {
+            if ($("#Pay_AmtID").val() == "") {
+                error("Fill Amount", "topCenter");
+            }
+            else if ($("#Pay_TypeID").val() == 0) {
+                error("Select Deposite Type", "topCenter");
+            }
+            else if ($("#Pay_RemarksID").val() == "") {
+                error("Fill Remarks", "topCenter");
+            }
+        }
+    });
+
+    $("#btnClear").click(function () {
+        $("#hdn_Id").val('0');
+        $("#Pay_AmtID").val('');
+        $('#Pay_TypeID option[value="0"]').prop('selected', true);
+        $("#Pay_RemarksID").val('');
+        localStorage.removeItem('temp_StoredAmt');
+    });
+
+    $("#Pay_AmtID").keyup(function () {
+        if ($("#Pay_AmtID").val() != "") {
+            var numericInput = $("#Pay_AmtID").val().replace(/[^0-9]/g, '');
+            $("#Pay_AmtID").val(numericInput);
+
+            var Collected_Amt = parseFloat($("#Collected_Amt").text());
+            var Submitted_Amt = parseFloat($("#Submitted_Amt").text());
+            var Pending_Amt = parseFloat($("#Pending_Amt").text());
+
+            var Payment_Amt = parseFloat($("#Pay_AmtID").val());
+
+            var get_Temp_Amt = localStorage.getItem('temp_StoredAmt');
+
+            if (Payment_Amt > 0) {
+                if (get_Temp_Amt != null) {
+                    var Edit_Amt = Submitted_Amt - get_Temp_Amt;
+                    var Total_Amt = Payment_Amt + Edit_Amt;
+
+                    if (Pending_Amt == 0) {
+                        if (Total_Amt <= Collected_Amt) {
+                            return true;
+                        }
+                        else {
+                            $("#Pay_AmtID").val("");
+                        }
+                    }
+                    else {
+                        if (Total_Amt <= Pending_Amt) {
+                            return true;
+                        }
+                        else {
+                            $("#Pay_AmtID").val("");
+                        }
+                        
+                    }
+
+                    
+                }
+                else {
+                    if (Payment_Amt <= Pending_Amt) {
+                        return true;
+                    }
+                    else {
+                        $("#Pay_AmtID").val("");
+                    }
+                }
+            }
+            else {
+                error("0 Is Not Valid In This Field", "topCenter");
+                $("#Pay_AmtID").val("");
+            }
+
+        }
+        
+       
+    });
+
+
+    $("#btnDownload").click(function () {
+        downloadTableAsCSV();
+    })
+
+    function downloadTableAsCSV() {
+        var table = document.querySelector('table');
+        var csvContent = '';
+
+        var headers = [];
+        $("#tblSubmission_History th").each(function () {
+            headers.push($(this).text());
+        });
+
+        csvContent += headers.join(',') + '\n';
+        var rows = Array.from(table.querySelectorAll('tr'));
+        rows.forEach(function (row) {
+            var cells = Array.from(row.querySelectorAll('td')).map(function (cell) {
+                return cell.textContent;
+            });
+            csvContent += cells.join(',') + '\n';
+        });
+        var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        var downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = 'Incharge_Report.csv';
+        downloadLink.click();
+    }
+
+
+
+
+
+</script>
+

@@ -1,0 +1,86 @@
+﻿<link href="~/Content/css/feedback.css" rel="stylesheet" />
+
+<h3 class="text-center color3">
+    <strong>
+     Please let us know your experiance with this tool
+    </strong>
+
+</h3>
+<div class="star-rating">
+    <div class="thanks-msg">Thanks for your feedback !!!</div>
+    <div class="star-input">
+        <input type="radio" value="5" name="rating" id="rating-5">
+        <label for="rating-5" class="fa fa-star"></label>
+        <input type="radio" value="4" name="rating" id="rating-4">
+        <label for="rating-4" class="fa fa-star"></label>
+        <input type="radio" value="3" name="rating" id="rating-3">
+        <label for="rating-3" class="fa fa-star"></label>
+        <input type="radio" value="2" name="rating" id="rating-2">
+        <label for="rating-2" class="fa fa-star"></label>
+        <input type="radio" value="1" name="rating" id="rating-1">
+        <label for="rating-1" class="fa fa-star"></label>
+        <form>
+            <h3>    <span class="rating-reaction"></span></h3>
+            <br />.
+            <textarea class="form-control" id="feedback" rows="4" placeholder="Enter Feedback/Comment"></textarea>
+            <br />
+            <a id="submit_feedback" class="submit-rating bg2" style="cursor:pointer;text-decoration:none;">Submit</a>
+
+        </form>
+    </div>
+</div>
+
+<script>
+    $("#submit_feedback").click(function () {
+        if (feedback_Validation() != 1) {
+            $("#submit_feedback").addClass('disabled');
+            $("#submit_feedback").hide();
+            
+            $.ajax({
+                beforeSend: function () {
+                    $('#loader').show();
+                },
+                complete: function () {
+                    $('#loader').hide();
+                },
+                error: function (ex) {
+                    error("Failed to Save Feedback" + ex.Message, "topCenter");
+                    $('#loader').hide();
+                },
+                type: 'POST',
+                url: '/Creg/Save_Feedback',
+                dataType: 'json',
+                async: false,
+                data: { Rating: $("input[name='rating']:checked").val(), Comment: $("#feedback").val() },
+                success: function (data) {
+                    if (data.Status != false) {
+                        success("Thank you for submitting comment/feedback", "topCenter");
+                        $('input[name="rating"]').prop('checked', false);
+                        $("#feedback").val("");
+                    }
+                }
+            });
+        }
+        else {
+            $("#submit_feedback").removeClass('disabled');
+        }
+    });
+    function feedback_Validation() {
+        var status = 0;
+        if ($("#feedback").val() == "") {
+            error("Enter comment", "bottomRight");
+            $("#feedback").focus();
+            status = 1;
+            return status;
+        }
+        else if ($("input[name='rating']:checked").val() == undefined) {
+            error("select the Rating", "topCenter");
+            $("#rating").attr("style", "border:solid;border-color:orangered;");
+            $('#rating').focus();
+            status = 1;
+            return status;
+        }
+        return status;
+    }
+
+</script>

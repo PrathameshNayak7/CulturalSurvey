@@ -1,0 +1,1382 @@
+﻿@model CulturaSurvey.ViewModel.vmRegistration
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+<link href="~/Content/css/slim.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+
+
+<style>
+    .form-group {
+        margin-bottom: 5px;
+    }
+
+    .sharad {
+    }
+
+    body {
+        /*background-color: #eef9fa;*/
+        background-color: #fff;
+    }
+
+    .form-control {
+        color: #495057;
+        background-color: #fff;
+        box-shadow: none !important;
+        border-radius: 15px;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 34px !important;
+    }
+
+    .select2-container--default {
+        position: unset;
+        background-color: #fff;
+        box-shadow: none !important;
+        border-radius: 15px;
+    }
+
+    .select2-container--default .select2-selection--single {
+        border: 1px solid #ccc !important;
+        border-radius: 0px !important;
+    }
+
+    @@media only screen and (min-device-width:320px) and (max-device-width: 768px) {
+        /* For mobile phones: */
+        h3 #Event_Name {
+            font-size: 16px;
+        }
+
+        h3 #About_Event {
+            font-size: 10px;
+        }
+    }
+
+    @@media only screen and (min-device-width: 812px) and (max-device-width: 1281px) {
+        /* For mobile phones: */
+        h3 #Event_Name {
+            font-size: 20px;
+        }
+
+        h3 #About_Event {
+            font-size: 14px;
+        }
+    }
+
+    .date {
+    }
+</style>
+<span style="position: absolute; top: 50px; right: 10px;cursor:pointer;text-align:center;z-index:99999;display:none;">
+    <select class="form-control" id="Language_Code">
+        <option value="English"> English (India)</option>
+        <option value="Kannada"> ಕನ್ನಡ</option>
+        <option value="Telugu">తెలుగు</option>
+    </select>
+</span>
+
+<h3 class="text-center color4" style="margin-top:12px;margin-bottom:-5px;">
+    <img src="~/Content/images/DS_Logo.png" class="hidden-xs" style="height:50px;float:left;margin-left:20px;" />
+    <img src="~/Content/images/DS_Logo.png" class="hidden-lg hidden-md hidden-sm  center-block" style="height:35px;" />
+
+    <label id="Event_Name" style="margin-top:10px;"></label><br />
+    <span class="color15" style=" font-size: 14px;"> <label id="About_Event"></label></span>
+</h3>
+
+
+
+<div class="container-fluid">
+
+
+    <hr class="z-depth-3 bg4" />
+    <div id="vwTerms" class="color14">
+        <div class="modal-title">
+            <h3 class="color8" style="margin-left: 20px; margin-bottom: -2px;">Terms and Conditions</h3>
+        </div>
+
+        @using (Html.BeginForm("MakePaymentRequest", "Creg", FormMethod.Post, new { id = "frmPost" }))
+        {
+            <div class="modal-body">
+
+                <div id="pnlEng_Terms" class="eng z-depth-0" style="overflow:auto;max-height:200px;height:auto;">
+                </div>
+                <br />
+                <input type="checkbox" id="Agree" name="Agree" value="1" />
+                <label for="Agree" class="color3"> Agreed terms and conditions</label>
+
+                <div id="vwPersonal" style="display:none;">
+                    <div class="modal-title">
+                        <h3 class="color8">Student Details</h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label><span style="color:red;">*</span> First Name </label>
+                            <input type="text" id="FirstName" class="form-control" placeholder="First Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/gi,'');" autocomplete="off" />
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <label>
+                                <span style="color:red;">*</span>    Last Name
+                            </label>
+                            <input type="text" id="LastName" class="form-control" placeholder="Last Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/gi,'');" autocomplete="off" />
+                        </div>
+                        <div class="col-md-4 form-group">
+                            <label><span style="color:red;">*</span>  Full Name (As per 10th Marks Card) </label>
+                            <input type="text" id="FullName" class="form-control" placeholder="Name as per 10th mark card" autocomplete="off" onkeyup="this.value=this.value.replace(/[^a-zA-Z ]/g,'');" />
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label>
+                                <span style="color:red;">*</span>    DOB <span id="_age" class="colo3"></span> Years
+                            </label>
+                            <input type="date" id="DOB" class="form-control date" min="1990-01-01" max="2005-12-31" placeholder="DOB" autocomplete="off" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3 form-group">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.Contact_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Contact_No, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact No", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+                            @*<label>Contact No</label>
+                                <input type="text" id="ContactNo" class="form-control" />*@
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label style="color:red;">*</label>
+
+                            @Html.LabelFor(m => m.Email_Id, new { @class = "control-label", })
+                            @Html.EditorFor(m => m.Email_Id, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Email Id", @onkeyup = "this.value=this.value.toLowerCase();" } })
+                            @*<label>Email Id</label>
+                                <input type="text" id="EmailId" class="form-control" />*@
+                        </div>
+                        <div class="col-md-2 form-group">
+
+                            <label> <span style="color:red;">*</span>Gender</label>
+                            <br />
+                            <input type="radio" name="Gender" id="Male" value="Male">
+                            <label for="Male"> Male</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Female" name="Gender" value="Female">
+                            <label for="Female"> Female</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Trans" name="Gender" value="Trans">
+                            <label for="Trans"> Trans</label>
+                        </div>
+                        <div class="col-md-2  form-group">
+                            <label> <span style="color:red;">*</span>  Qualification</label>
+                            <select class="form-control" id="Qualification">
+                            </select>
+                        </div>
+                        <div class="col-md-2  form-group">
+                            <label><span style="color:red;">*</span>  Year of Passing</label>
+                            <select class="form-control" id="Yearofpassing">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 form-group">
+                            <label>
+                                <span style="color:red;">*</span>   Father/Guardian Name
+                            </label>
+                            <input type="text" id="MiddleName" class="form-control" placeholder="Father/Guardian Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/gi,'');" autocomplete="off" />
+                        </div>
+
+                        <div class="col-md-3 form-group">
+                            <span style="color:red;">*</span>
+                            @Html.LabelFor(m => m.Whatsapp_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Whatsapp_No, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Contact No", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+
+                        </div>
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span>  State</label>
+                            <select class="form-control" id="State_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-3  form-group">
+                            <label> <span style="color:red;">*</span>  District</label>
+                            <select class="form-control" id="District_Id">
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span>  Taluka/City</label>
+                            <select class="form-control" id="Taluka_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-3  form-group" style="display:none;" id="vmVillage">
+                            <label><span style="color:red;">*</span>  Village</label>
+                            <select class="form-control" id="Village_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span>  College Type</label>
+                            <select class="form-control" id="CourseType">
+                            </select>
+                        </div>
+                        <div class="col-md-6  form-group" style="display:none;" id="vwclgfree">
+                            <label><span style="color:red;">*</span>College Name</label>
+                            <input type="text" id="College" placeholder="College Name" class="form-control" onkeyup="this.value=this.value.replace(/[^a-zA-Z ]/g,'');" />
+                        </div>
+                        <div class="col-md-6  form-group" style="display:none;" id="vwclgdropdown">
+                            <label><span style="color:red;">*</span>College </label>
+                            <select class="form-control" id="College_Id" style="font-size: smaller;">                                                     
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span>  How you know about </label>
+                            <select class="form-control" id="Source">
+                                <option value="">[Select]</option>
+                                <option value="Orientation">Orientation</option>
+                                <option value="Website">Website</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Twitter">Twitter</option>
+                                <option value="Whatsapp">Whatsapp</option>
+                                <option value="Alumni">Alumni</option>
+                                <option value="Refered by friend">Referred by friend</option>
+
+                            </select>
+                        </div>
+                        <div class="col-md-2 form-group">
+                            <label> <span style="color:red;">*</span>Any Backlogs</label>
+                            <br />
+                            <input type="radio" id="BNo" name="Backlog" value="No">
+                            <label for="BNo"> No</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="Backlog" id="BYes" value="Yes">
+                            <label for="BYes"> Yes</label>
+                        </div>
+                        <div class="col-md-1" style="display:none;" id="vmTotalBacklogs">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.BYesNumber, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.BYesNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Backlogs", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "1" } })
+                        </div>
+
+                        <div class="col-md-2  form-group" style="display:none;">
+                            <label>Referred By</label>
+                            <input type="text" id="ReferredBy" placeholder="Referred By" autocomplete="off" class="form-control" />
+                        </div>
+                        <div class="col-md-3" style="display:none;">
+                            <br />
+                            <input type="checkbox" id="SkillingTraining" name="SkillingTraining" value="1" />
+                            <label for="SkillingTraining"> Are you student of Deshpande Skilling ?</label>
+                        </div>
+                        <div class="col-md-3" id="vmCertificateNo" style="display:none;">
+                            <label>Application Number</label>
+                            <input type="text" id="ApplicationNo" placeholder="Application Number" autocomplete="off" class="form-control" />
+                        </div>
+
+                    </div>
+
+                    <br />
+                    <div class="modal-title">
+                        <h3 class="color8">
+                            Application/Enquiry Process
+                        </h3>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span> Center</label>
+                            <select class="form-control" id="Institute">
+                            </select>
+                        </div>
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span> Course</label>
+                            <select class="form-control" id="Program">
+                            </select>
+                        </div>
+                        <div class="col-md-6  form-group">
+                            <label> <span style="color:red;">*</span>  Fellowship</label>
+                            <select class="form-control" id="Degree">
+                              
+                            </select>
+                        </div>
+
+                  
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3  form-group">
+                            <label><span style="color:red;">*</span>  Admission Year</label>
+                            <select class="form-control" id="AdmissionYear">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3  form-group">
+                            <label> <span style="color:red;">*</span>  Incharge</label>
+                            <select class="form-control" id="Incharge">
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label><span style="color:red;">*</span>  Reference Name</label>
+                            <input type="text" id="ReferenceName" placeholder="Reference Name" autocomplete="off" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <br />
+                            <a id="NextToPay" class="btn form-group bg15 color25">
+                                Create Application  <span class="fa fa-cloud"></span>
+                            </a>
+                            <a id="btnDraft" class="btn form-group bg6 color25">
+                                Save as Draft  <span class="fa fa-save"></span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <div id="vwPayment" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-2">
+
+                            @Html.LabelFor(m => m.Amount, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Amount, new { htmlAttributes = new { @class = "form-control", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');" } })
+                            @*<label>Enterance Fees</label>
+                                <input type="text" id="Fees" disabled="disabled" value="200" class="form-control" />*@
+                        </div>
+                        <div class="col-md-2">
+                            <br />
+                            <button type="submit" class="btn bg1 color25" id="FeesPay">
+                                <span class="fa fa-rupee"></span> Pay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<div class="modal fade" id="pop_MobileValidation">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="POP_title">Alert</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="color3">
+                    Dear Participant,
+                    <br />
+                    you are already registered with this phone number and firstname. Please change the details ?
+                </h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg3 color25" data-dismiss="modal">Close</button>
+                <a class="btn btn-primary" style="display:none;">Yes Proceed</a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="slim-footer" style="background-color: #f1fafb;">
+    <div class="container-fluid">
+        <p>
+            Copyright 2021 © All Rights Reserved Deshpande Skilling. For Any technical help CLICK HERE TO CALL
+            <span class="fa fa-phone"></span>
+            <a href="tel:9606947789">9606947789</a>
+        </p>
+        <p>
+            Handcrafted by:
+            <a href="https://www.deshpandefoundationindia.org" target="_blank">
+                Technology @@ Deshpande foundation
+            </a>
+        </p>
+    </div>
+    <!-- container -->
+</div>
+
+
+<input type="hidden" value="@ViewBag.hdnEventId" id="hdnEventId" />
+<input type="hidden" value="@ViewBag.hdnisCollegeDropdown" id="hdnisCollegeDropdown" />
+<input type="hidden" value="@ViewBag.hdnisCamuRegistration" id="hdnisCamuRegistration" />
+<input type="hidden" value="@ViewBag.hdnRID" id="hdnRID" />
+<input type="hidden" value="@ViewBag.hdnForm" id="hdnForm" />
+<input type="hidden" value="@ViewBag.hdnFees" id="hdnFees" />
+
+
+
+
+<script src="~/Content/js/jquery-3.2.1.min.js"></script>
+<script src="~/Content/js/select2.min.js"></script>
+<link href="~/Content/css/select2.min.css" rel="stylesheet" />
+<script src="~/Content/js/_Load_Event_Location.js"></script>
+<script src="~/Content/js/bootstrap.js"></script>
+
+<script>
+    $(function () {
+
+        $("#DOB").on('change', function () {
+            var today = new Date();
+            var nowyear = today.getFullYear();
+            var nowmonth = today.getMonth();
+            var nowday = today.getDate('dd-mm-yyyy');
+            var dob = $("#DOB").val();
+            //var d = new Date(dob);
+
+            //var d = new Date(dob.split("-").reverse().join("-"));
+            var d = new Date(dob);
+            var birthyear = d.getFullYear();
+            var birthmonth = d.getMonth() + 1;
+            var birthday = d.getDate();
+            var age = nowyear - birthyear;
+            var age_month = nowmonth - birthmonth;
+            var age_day = nowday - birthday;
+            if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+                age = parseInt(age) - 1;
+            }
+            document.getElementById("_age").innerHTML = age;
+
+        });
+    });
+
+
+</script>
+
+<script>
+    // prevent forms from auto submitting on all inputs
+    $(document).on("keydown", "input", function (e) {
+        if (e.which == 13) e.preventDefault();
+    });
+    $(document).ready(function () {
+
+        var _Reg = $("#hdnRID").val();
+        EventDetails();
+        $("#College_Id").select2();
+        $("#Degree").select2();
+
+        
+        if ($("#isCamuRegistration").val() == "0") {
+            $("#vmVillage").show();
+            LoadState();
+            LoadCourseType();
+
+        }
+        else {
+            $("#vmVillage").hide();
+            LoadCamuState();
+            LoadCamuCourseType();
+            LoadCamuInstitute();
+        }
+        if ($("#hdnisCollegeDropdown").val() == "0") {
+            $("#vwclgfree").show();
+            $("#vwclgdropdown").hide();
+        }
+        else {
+            $("#vwclgfree").hide();
+            $("#vwclgdropdown").show();
+        }
+        LoadCamuQualification();
+        if (_Reg != "0") {
+            GetRegistration(_Reg);
+        }
+        var Fees = $("#hdnFees").val();
+        $("#Amount").val(Fees);
+        document.getElementById("Amount").disabled = true;
+    });
+
+    function GetRegistration(Reg) {
+        $.get("/Creg/GetMoreRegistrationDetails", { Registration_Id: Reg }, function (data) {
+            if (data.Message == "success") {
+                if (data.list.isRegistration_Completed == "1") {
+                    window.location.replace("/Creg/Submitted?n=" + data.list.First_Name);
+                }
+                else {
+                    $("input[name=Agree][value='1']").prop('checked', true);
+                    if (data.list.BYN == "Yes") {
+                        $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+
+                        $("#vmTotalBacklogs").show();
+
+                        $('#BYesNumber').val(data.list.BYesNumber);
+                    }
+                    else {
+                        $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+                        $("#vmTotalBacklogs").hide();
+                    }
+                    if (data.list.Application_Status == "Draft") {
+                        $("#vwPayment").hide();
+                        $("#btnDraft").show();
+                    }
+                    else {
+                        $("#btnDraft").hide();
+                        $("#vwPayment").show();
+                    }
+
+                    $('#FirstName').val(data.list.First_Name);
+                    $('#LastName').val(data.list.Last_Name);
+                    $('#FullName').val(data.list.Name_On_Certificate);
+                    $('#DOB').val(data.list.DOB);
+                    document.getElementById("_age").innerHTML = data.list.Age;
+                    $('#Contact_No').val(data.list.Contact_No);
+                    $('#Email_Id').val(data.list.Email_Id);
+                    $('input[name="Gender"][value="' + data.list.Gender + '"]').attr('checked', true);
+                    $('#Qualification').val(data.list.Qualification_Id);
+                    $('#Yearofpassing').val(data.list.Year_Of_Passing);
+                    $('#MiddleName').val(data.list.Middle_Name);
+                    $('#Whatsapp_No').val(data.list.Whatsapp_No);
+                    $('#State_Id').val(data.list.State_Id);
+                    LoadCamuDistrict();
+                    $('#District_Id').val(data.list.District_id);
+                    LoadCamuTaluka();
+                    $('#Taluka_Id').val(data.list.Taluka_Id);
+                    $('#CourseType').val(data.list.College_Type_Id);
+                    LoadCamuColleges();
+                    $('#College_Id').val(data.list.College_Id);
+                    $('#Source').val(data.list.Source);
+                    LoadCamuInstitute();
+                    $('#Institute').val(data.list.Institution_Id);
+                    LoadCamuProgram();
+                    $('#Program').val(data.list.Program_Id);
+
+                    LoadCamuDegree();
+                    $('#Degree').val(data.list.Degree_Id);
+
+                    LoadCamuAcademic();
+                    $('#AdmissionYear').val(data.list.Academic_Id);
+                    LoadCamuStaffs();
+                    $('#Incharge').val(data.list.Incharge_Id);
+                    $('#ReferenceName').val(data.list.Reference_Name);
+
+                    $("#vwPersonal").show();
+
+
+                }
+
+
+                return false;
+            }
+            else {
+                error(data.message, "topCenter");
+            }
+        }, "json");
+    }
+
+    $("input[name='Backlog']").click(function () {
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            $("#vmTotalBacklogs").show("slow");
+        }
+        else {
+            $("#vmTotalBacklogs").hide("slow");
+        }
+    });
+
+
+    function EventDetails() {
+        $.ajax({
+            beforeSend: function () {
+                $('#loader').show();
+            },
+            complete: function () {
+                $('#loader').hide();
+            },
+            cache: false,
+            async: false,
+            type: 'GET',
+            dataType: 'json',
+            url: '/Creg/GetEventDetails',
+            data: { Event_ID: $("#hdnEventId").val() },
+            success: function (data) {
+                if (data.list != null) {
+                    if (data.Status == true) {
+                        if (data.list.isEnabled == 1) {
+                            $("#Event_Name").html(data.list.Event_Name);
+                            $("#About_Event").html(data.list.About_Event);
+                            $("#pnlEng_Terms").html(data.list.Terms_Conditions);
+                            $("#hdnForm").val(data.list.Registration_Form);
+                        }
+                        else {
+                            //redirect to registration closed
+                        }
+                    }
+                    else {
+                        error(data.Message, "topCenter");
+                    }
+                }
+                else {
+                    error(data.Message, "topCenter");
+                }
+            },
+            error: function (ex) {
+                error("Error :" + ex.Message, "topCenter");
+                $('#loader').hide();
+            }
+        });
+    }
+
+    $('#College').keyup(function () {
+        this.value = this.value.toUpperCase();
+    });
+    var mintext = 2;
+    //$("#College").autocomplete({
+    //    source: function (request, response) {
+    //        $.ajax({
+    //            cache: false,
+    //            async: false,
+    //            type: 'POST',
+    //            url: '/Event/Load_College_Autocomplete/',
+    //            data: { prefix: request.term.toUpperCase() },
+    //            success: function (data) {
+    //                response($.map(data, function (item) {
+    //                    return {
+    //                        label: item.College_Name,
+    //                        val: item.College_Id
+    //                    }
+    //                }))
+    //            },
+    //            error: function (response) {
+    //                error(response.responseText, "topCenter");
+
+    //            },
+    //            failure: function (response) {
+    //                error(response.responseText, "topCenter");
+    //            }
+    //        });
+
+    //    },
+    //    select: function (e, i) {
+    //        var t = i.item.val;
+
+    //        if (i.item.val != 0) {
+    //            $("#College").val(i.item.val);
+    //        }
+    //        else {
+
+    //            $("#College").val("");
+    //        }
+    //    },
+    //    minLength: mintext
+    //});
+
+    $("#Agree").click(function () {
+        var _Reg = $("#hdnRID").val();
+        if ($("#hdnisCollegeDropdown").val() == "0") {
+            $("#vwclgfree").show();
+            $("#vwclgdropdown").hide();
+        }
+        else {
+            $("#vwclgfree").hide();
+            $("#vwclgdropdown").show();
+        }
+        var temp = $("input[name='Agree']:checked").val();
+        if ($("input[name='Agree']:checked").val() == '1') {
+            $("#vwPersonal").show("slow");
+            if (_Reg > 0) {
+                $.get("/Creg/GetMoreRegistrationDetails", { Registration_Id: _Reg }, function (data) {
+                    if (data.Message == "success") {
+                        if (data.list.isRegistration_Completed == "1") {
+                            window.location.replace("/Creg/Submitted?n=" + data.list.First_Name);
+                        }
+                        if (data.list.Application_Status == "Draft") {
+                            $("#vwPayment").hide();
+                            $("#btnDraft").show();
+                        }
+                        else {
+                            $("#btnDraft").hide();
+                            $("#vwPayment").show();
+                        }
+                    }
+                    else {
+                        error(data.message, "topCenter");
+                    }
+                }, "json");
+
+            }
+        }
+        else {
+            $("#vwPersonal").hide("slow");
+        }
+      
+
+    });
+    $("#SkillingTraining").click(function () {
+        if ($("input[name='SkillingTraining']:checked").val() == '1') {
+            $("#vmCertificateNo").show("slow");
+        }
+        else {
+            $("#vmCertificateNo").hide("slow");
+        }
+
+    });
+
+    $("#NextToPay").click(function () {
+
+        $("#NextToPay").addClass('disabled');
+        $("#loader").show();
+
+
+        if (RegFormValidation() > 0) {
+            var reg = $("#hdnRID").val();
+            if ($("#hdnRID").val() > 0) {
+
+                Save_Registration();
+
+            }
+            else {
+                Mobile_Validation();
+
+            }
+        }
+        else {
+            $("#NextToPay").removeClass('disabled');
+
+        }
+        $("#loader").hide();
+        return false;
+    });
+
+    $("#btnDraft").click(function () {
+
+        $("#btnDraft").addClass('disabled');
+        $("#loader").show();
+
+
+        if (RegFormValidationDraft() > 0) {
+            var reg = $("#hdnRID").val();
+            if ($("#hdnRID").val() > 0) {
+                Save_Draft_Registration();
+            }
+            else {
+                Mobile_Validation_Draft();
+            }
+        }
+        else {
+            $("#btnDraft").removeClass('disabled');
+
+        }
+        $("#loader").hide();
+        return false;
+    });
+
+    $("#YesProceed").click(function () {
+        $('#pop_MobileValidation').modal('hide');
+        Save_Registration();
+    });
+    function Mobile_Validation() {
+        $.get("/Creg/GetMobile_Validation", { Mobile_No: $('#Contact_No').val(), First_Name: $('#FirstName').val() }, function (data) {
+            if (data.Message == "Exists") {
+                $('#pop_MobileValidation').modal('show');
+                $("#NextToPay").removeClass('disabled');
+            }
+            else if (data.Message == "NotExists") {
+                Save_Registration();
+            }
+            else {
+                error("Error :" + data.Message, "topCenter");
+            }
+            return false;
+
+        }, "json");
+    }
+    function Mobile_Validation_Draft() {
+        $.get("/Creg/GetMobile_Validation", { Mobile_No: $('#Contact_No').val(), First_Name: $('#FirstName').val() }, function (data) {
+            if (data.Message == "Exists") {
+                $('#pop_MobileValidation').modal('show');
+                $("#btnDraft").removeClass('disabled');
+            }
+            else if (data.Message == "NotExists") {
+                Save_Draft_Registration();
+            }
+            else {
+                error("Error :" + data.Message, "topCenter");
+            }
+            return false;
+
+        }, "json");
+    }
+    function Save_Registration() {
+
+        $("#loader").show();
+              var _Isfees =@HttpContext.Current.Request.Cookies["eventloginifo"]["IsFees"].ToString();
+        var Backlogs = "0";
+        var isBacklogs = 0;
+
+
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            isBacklogs = 1;
+            Backlogs = $("#BYesNumber").val();
+        }
+        else {
+            isBacklogs = 0;
+            Backlogs = "0";
+        }
+
+
+        if ($("input[name='SkillingTraining']:checked").val() == '1') {
+            IsSkillingTraining = "1";
+            Certificate_No = $('#ApplicationNo').val();
+        }
+
+        if ($("#isCamuRegistration").val() == "0") {
+            Village_Id = $('#Village_Id').val();
+
+            }
+        var vmA = {
+            'Registration_Id': $("#hdnRID").val(),
+            'First_Name': $('#FirstName').val(),
+            'Last_Name': $('#LastName').val(),
+            'Name_On_Certificate': $('#FullName').val(),
+            'DOB': $('#DOB').val(),
+            'Age': $("#_age").html(),
+            'Contact_No': $('#Contact_No').val(),
+            'Email_Id': $('#Email_Id').val(),
+            'Gender': $("input[name='Gender']:checked").val(),
+            'Qualification_Id': $('#Qualification').val(),
+            'Year_Of_Passing': $('#Yearofpassing').val(),
+            'Middle_Name': $('#MiddleName').val(),
+            'Whatsapp_No': $('#Whatsapp_No').val(),
+            'State_Id': $('#State_Id').val(),
+            'District_id': $('#District_Id').val(),
+            'Taluka_Id': $('#Taluka_Id').val(),
+            'College_Type_Id': $("#CourseType").val(),
+            'College_Id': $('#College_Id').val(),
+            'BYN': isBacklogs,
+            'BYesNumber': Backlogs,
+            'Source': $('#Source').val(),
+            'Institution_Id': $('#Institute').val(),
+            'Program_Id': $('#Program').val(),
+            'Degree_Id': $('#Degree').val(),
+            'Academic_Id': $('#AdmissionYear').val(),
+            'Incharge_Id': $('#Incharge').val(),
+            'Reference_Name': $('#ReferenceName').val(),
+            'isAccept_Terms': $('#Agree').val(),
+            'isPayment_Done': "0",
+        };
+
+
+        $.post("/Creg/Save_Registration", { Reg: vmA }, function (res) {
+            $("#loader").show();
+            if (res.Status == true) {
+                    if (_Isfees == "1") {
+                        $('#pop_MobileValidation').modal('hide');
+                        success("Details are saved!! Pay the Fees", "topCenter");
+                        $("#vwPayment").show();
+                        $("#NextToPay").removeClass('disabled');
+
+                        window.location.replace("/Creg/Reg?RID=" + res.Message).delay(800);
+
+                    }
+                    else {
+                        window.location.replace("/Creg/Thankyou");
+                    }
+                    $("#loader").hide();
+                    return;
+                }
+            }, "json");
+
+            return false;
+    }
+
+     function Save_Draft_Registration() {
+
+        $("#loader").show();
+              var _Isfees =@HttpContext.Current.Request.Cookies["eventloginifo"]["IsFees"].ToString();
+        var Backlogs = "0";
+        var isBacklogs = 0;
+         var gender = "";
+         var qualification = "";
+         var yearofpassing = "";
+         var fathername = "";
+         var fathercontact = "";
+         var state = "";
+         var district = "";
+         var taluk = "";
+         var collegetype = "";
+         var college = "";
+         var source = "";
+         var AdmissionYear = "";
+         var center = "", course = "", fellowship = "", admissionyear = "", incharge = "", reference = "";
+
+
+         if ($("input[name='Gender']:checked").val() == "") {
+             gender = '';
+         }
+         else {
+             gender = $("input[name='Gender']:checked").val();
+         }
+         if ($("#Qualification").val() == "") {
+             qualification = '';
+         }
+         else {
+             qualification = $("#Qualification").val();
+         }
+         if ($("#Yearofpassing").val() == "") {
+             yearofpassing = '';
+         }
+         else {
+             yearofpassing = $("#Yearofpassing").val();
+         }
+         if ($("#MiddleName").val() == "") {
+             fathername = '';
+         }
+         else {
+             fathername = $("#MiddleName").val();
+         }
+
+         if ($("#Whatsapp_No").val() == "") {
+             fathercontact = '';
+         }
+         else {
+             fathercontact = $("#Whatsapp_No").val();
+         }
+         if ($("#State_Id").val() == "") {
+             state = '';
+         }
+         else {
+             state = $("#State_Id").val();
+         }
+         if ($("#District_Id").val() == "") {
+             district = '';
+         }
+         else {
+             district = $("#District_Id").val();
+         }
+         if ($("#Taluka_Id").val() == "") {
+             taluk ='';
+         }
+         else {
+             taluk = $("#Taluka_Id").val();
+         }
+         if ($("#CourseType").val() == "") {
+             collegetype = '';
+         }
+         else {
+             collegetype = $("#CourseType").val();
+         }
+         if ($("#College_Id").val() == "") {
+             college = '';
+         }
+         else {
+             college = $("#College_Id").val();
+         }
+         if ($("#Source").val() == "") {
+             source = '';
+         }
+         else {
+             source = $("#Source").val();
+         }
+
+         if ($("#Institute").val() == "") {
+             center = '';
+         }
+         else {
+             center = $("#Institute").val();
+         }
+         if ($("#Program").val() == "") {
+             course = '';
+         }
+         else {
+             course = $("#Program").val();
+         }
+         if ($("#Degree").val() == "") {
+             fellowship = '';
+         }
+         else {
+             fellowship = $("#Degree").val();
+         }
+         if ($("#AdmissionYear").val() == "") {
+             admissionyear = '';
+         }
+         else {
+             admissionyear = $("#AdmissionYear").val();
+         }
+
+
+
+         if ($("#Incharge").val() == "") {
+             incharge = '';
+         }
+         else {
+             incharge = $("#Incharge").val();
+         }
+         if ($("#ReferenceName").val() == "") {
+             reference ='';
+         }
+         else {
+             reference = $("#ReferenceName").val();
+         }
+
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            isBacklogs = 1;
+            Backlogs = $("#BYesNumber").val();
+        }
+        else {
+            isBacklogs = 0;
+            Backlogs = "0";
+        }
+
+
+         var vmA = {
+
+            'Registration_Id': $("#hdnRID").val(),
+            'First_Name': $('#FirstName').val(),
+            'Last_Name': $('#LastName').val(),
+            'Name_On_Certificate': $('#FullName').val(),
+            'DOB': $('#DOB').val(),
+            'Age': $("#_age").html(),
+            'Contact_No': $('#Contact_No').val(),
+             'Email_Id': $('#Email_Id').val(),
+             'Gender': gender,
+             'Qualification_Id': qualification,
+             'Year_Of_Passing': yearofpassing,
+             'Middle_Name': fathername,
+             'Whatsapp_No': fathercontact,
+             'State_Id': state,
+             'District_id': district,
+             'Taluka_Id': taluk,
+             'College_Type_Id': collegetype,
+             'College_Id': college,
+            'BYN': isBacklogs,
+             'BYesNumber': Backlogs,
+             'Source': source,
+             'Institution_Id': center,
+             'Program_Id': course,
+             'Degree_Id': fellowship,
+             'Academic_Id': admissionyear,
+             'Incharge_Id': incharge,
+             'Reference_Name': reference,
+            'isAccept_Terms': $('#Agree').val(),
+            'isPayment_Done': "0",
+        };
+
+
+         $.post("/Creg/Save_Registration_Draft", { Reg: vmA }, function (res) {
+            $("#loader").show();
+            if (res.Status == true) {
+                    if (_Isfees == "1") {
+                        $('#pop_MobileValidation').modal('hide');
+                        success("Details are saved!! Fill complete form and proceed for payment", "topCenter");
+
+                        $("#btnDraft").removeClass('disabled');
+
+                        window.location.replace("/Creg/Reg?RID=" + res.Message).delay(3000);
+
+                    }
+                    else {
+                        window.location.replace("/Creg/Thankyou");
+                    }
+                    $("#loader").hide();
+                    return;
+                }
+            }, "json");
+
+            return false;
+    }
+
+    function RegFormValidation() {
+        var status = 0;
+        var t = $('#AssetNumber').val();
+
+        if ($('#FirstName').val() == '') {
+            status = 0;
+            info("Enter First Name", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        if ($('#FirstName').val().length <3) {
+            status = 0;
+            info("Enter Min 3 Letter", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        else if ($('#LastName').val() == '') {
+            status = 0;
+            info("Enter Last Name", "topCenter");
+            $('#LastName').focus();
+            return status;
+        }
+        else if ($('#FullName').val() == '') {
+            status = 0;
+            info("Enter Name as per 10th mark sheet", "topCenter");
+            $('#FullName').focus();
+            return status;
+        }
+        else if ($('#DOB').val() == '') {
+            status = 0;
+            info("Select DOB", "topCenter");
+            $('#DOB').focus();
+            return status;
+        }
+
+        else if ($('#Contact_No').val() == '') {
+            status = 0;
+            info("Enter Contact Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if (($('#Contact_No').val().length < 10) || ($('#Contact_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if ($('#Email_Id').val() == '') {
+            status = 0;
+            info("Enter Mail Id", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if (IsEmail($('#Email_Id').val()) == false) {
+            status = 0;
+            info("invalid email", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if ($("input[name='Gender']:checked").val() == undefined) {
+            status = 0;
+            info("select the Gender", "topCenter");
+            $('#Gender').focus();
+            return status;
+        }
+        else if ($('#Qualification').val() == '' || $('#Qualification').val() == '0' || $('#Qualification').val() == null) {
+            status = 0;
+            info("Select Qualification", "topCenter");
+            $('#Qualification').focus();
+            return status;
+        }
+        else if ($('#Yearofpassing').val() == '') {
+            status = 0;
+            info("Select Year of passing", "topCenter");
+            $('#Yearofpassing').focus();
+            return status;
+        }
+
+        else if ($('#MiddleName').val() == '') {
+            status = 0;
+            info("Enter Father/Guardian Name", "topCenter");
+            $('#MiddleName').focus();
+            return status;
+        }
+        else if ($('#Whatsapp_No').val() == '') {
+            status = 0;
+            info("Enter Father/Guardian Number", "topCenter");
+            $('#Whatsapp_No').focus();
+            return status;
+        }
+        else if (($('#Whatsapp_No').val().length < 10) || ($('#Whatsapp_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Father/Guardian Number", "topCenter");
+            $('#Whatsapp_No').focus();
+            return status;
+        }
+        else if ($('#State_Id').val() == '' || $('#State_Id').val() == null) {
+            status = 0;
+            info("Select your State", "topCenter");
+            $('#State_Id').focus();
+            return status;
+        }
+        else if ($('#District_Id').val() == '' || $('#District_Id').val() == null) {
+            status = 0;
+            info("Select your District", "topCenter");
+            $('#District_Id').focus();
+            return status;
+        }
+        else if ($('#Taluka_Id').val() == '' || $('#Taluka_Id').val() == null) {
+            status = 0;
+            info("Select your Taluka", "topCenter");
+            $('#Taluka_Id').focus();
+            return status;
+        }
+        else if ($('#Village_Id').val() == '' && $("#isCamuRegistration").val() == "0") {
+            status = 0;
+            info("Select your Village", "topCenter");
+            $('#Village_Id').focus();
+            return status;
+        }
+        else if ($('#CourseType').val() == '' || $('#CourseType').val() == null) {
+            status = 0;
+            info("Select Course Type", "topCenter");
+            $('#CourseType').focus();
+            return status;
+        }
+        //else if ($('#College').val() == '' && $("#hdnisCollegeDropdown").val()=="0") {
+        //    status = 0;
+        //    info("Enter College Name", "topCenter");
+        //    $('#College').focus();
+        //    return status;
+        //}
+        //else if ($('#College').val() == 'College Not Found' && $("#hdnisCollegeDropdown").val() == "0") {
+        //    status = 0;
+        //    info("Enter Valid College Name", "topCenter");
+        //    $('#College').focus();
+        //    return status;
+        //}
+        //else if ($('#College').val().length < 4 && $("#hdnisCollegeDropdown").val() == "0") {
+        //    status = 0;
+        //    info("Enter Min 4 letter of College", "topCenter");
+        //    $('#College').focus();
+        //    return status;
+        //}
+        else if ($('#College_Id').val() == '' || $('#College_Id').val() == null) {
+            status = 0;
+            info("Please Select the College", "topCenter");
+            $('#College_Id').focus();
+            return status;
+        }
+
+        else if ($('#Source').val() == '') {
+            status = 0;
+            info("Select the Source", "topCenter");
+            $('#Source').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == undefined) {
+            status = 0;
+            info("select the Backlogs", "topCenter");
+            $('#Backlog').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == 'Yes' && $("#BYesNumber").val() == "") {
+                info("Enter No of Backlogs", "topCenter");
+                $('#BYesNumber').focus();
+                status = 0;
+                return status;
+        }
+        else if ($("#Institute").val() == '' || $('#Institute').val() == null) {
+            status = 0;
+            info("Select the Centre", "topCenter");
+            $('#Institute').focus();
+            return status;
+        }
+        else if ($("#Program").val() == '' || $('#Program').val() == null) {
+            status = 0;
+            info("Select the Fellowship", "topCenter");
+            $('#Program').focus();
+            return status;
+        }
+        else if ($("#Degree").val() == '' || $('#Degree').val() == null) {
+            status = 0;
+            info("Select the Course", "topCenter");
+            $('#Degree').focus();
+            return status;
+        }
+        else if ($("#AdmissionYear").val() == '' || $('#AdmissionYear').val() == null) {
+            status = 0;
+            info("Select the Admission Year", "topCenter");
+            $('#AdmissionYear').focus();
+            return status;
+        }
+        else if ($("#Incharge").val() == '' || $('#Incharge').val() == null) {
+            status = 0;
+            info("Select the Incharge", "topCenter");
+            $('#Incharge').focus();
+            return status;
+        }
+        else if ($("#ReferenceName").val() == '') {
+            status = 0;
+            info("Enter the Reference Name", "topCenter");
+            $('#ReferenceName').focus();
+            return status;
+        }
+        else {
+            status = 1;
+        }
+
+        return status;
+    }
+
+
+    function RegFormValidationDraft() {
+        var status = 0;
+
+        if ($('#FirstName').val() == '') {
+            status = 0;
+            info("Enter First Name", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        if ($('#FirstName').val().length < 3) {
+            status = 0;
+            info("Enter Min 3 Letter", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        else if ($('#LastName').val() == '') {
+            status = 0;
+            info("Enter Last Name", "topCenter");
+            $('#LastName').focus();
+            return status;
+        }
+        else if ($('#FullName').val() == '') {
+            status = 0;
+            info("Enter Name as per 10th mark sheet", "topCenter");
+            $('#FullName').focus();
+            return status;
+        }
+        else if ($('#DOB').val() == '') {
+            status = 0;
+            info("Select DOB", "topCenter");
+            $('#DOB').focus();
+            return status;
+        }
+
+        else if ($('#Contact_No').val() == '') {
+            status = 0;
+            info("Enter Contact Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if (($('#Contact_No').val().length < 10) || ($('#Contact_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if ($('#Email_Id').val() == '') {
+            status = 0;
+            info("Enter Mail Id", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if (IsEmail($('#Email_Id').val()) == false) {
+            status = 0;
+            info("invalid email", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == 'Yes' && $("#BYesNumber").val() == "") {
+            info("Enter No of Backlogs", "topCenter");
+            $('#BYesNumber').focus();
+            status = 0;
+            return status;
+        }
+        else {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    function IsEmail(email) {
+        var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!regex.test(email)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+</script>

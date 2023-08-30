@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <script src="~/Content/js/jquery.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.4.3.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            var connection = $.connection("/echo");
+
+            connection.start().done(function () {
+                console.log("Connected");
+                $("#chatWindow").val("Connected\n");
+                $("#sendButton").click(function () {
+                    connection.send($("#messageTextBox").val());
+                    $("#messageTextBox").val("")
+                });
+            });
+
+            connection.received(function (data) {
+                $("#chatWindow").val($("#chatWindow").val() + data + "\n");
+            });
+        });
+    </script>
+</head>
+<body>
+    <textarea id="chatWindow" style="width:400px; height:200px;"></textarea>
+    <div>
+        <label>Message</label>
+        <input id="messageTextBox" type="text" />
+        <button id="sendButton">Send</button>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+﻿
+@{
+    ViewBag.Title = "Submitted";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+<br />
+<div class="container-fluid">
+    <div class="card bg4" id="vmSubmitted">
+        <div class="modal-body">
+        <div class="row">
+            <div class="col-md-1 text-center">
+                <img src="/Content/images/DS_Logo_White.png" style="height:60px;margin-top:25px;">
+            </div>
+            <div class="col-md-11">
+                <h1 class="text-center color25">
+
+
+                    Dear  @ViewBag.Name, Thank you !!
+
+
+
+                </h1>
+
+                <h3 class="text-center color25">
+                    <strong>
+                        Your registration already completed.
+                    </strong>
+                    <br />
+                    <br />
+                    <a href="https://www.deshpandefoundationindia.org/deshpande-skilling/" target="_blank" class="btn btn-sm btn-primary">Deshpande Skilling </a>
+             
+                </h3>
+            </div>
+        </div>
+         
+        </div>
+    </div>
+   <hr />
+    <div class="row" id="selections">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-11">
+                    @Html.Partial("_Registration_Feedback")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>

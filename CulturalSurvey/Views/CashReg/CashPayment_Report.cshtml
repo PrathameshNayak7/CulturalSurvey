@@ -1,0 +1,529 @@
+﻿@{
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+
+
+<style>
+    table tbody td {
+        white-space: nowrap
+    }
+
+    .custome-hide {
+    }
+
+    table thead th {
+        white-space: nowrap
+    }
+
+    .dt-button {
+        float: right;
+        margin-left: 9px;
+        line-height: 26px;
+        position: relative;
+        padding: 5px 22px;
+        border: 0;
+        cursor: pointer;
+        border-radius: 2px;
+        letter-spacing: 3px;
+        text-decoration: none;
+        outline: none !important;
+        -webkit-transition: 0.2s ease-out;
+        -moz-transition: 0.2s ease-out;
+        -o-transition: 0.2s ease-out;
+        /*-ms-transition: 0.2s ease-out;*/
+        transition: 0.2s ease-out;
+        font-family: Quicksand;
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+    }
+
+    .dataTables_wrapper {
+        margin-top: -48px;
+    }
+
+    .buttons-print {
+        background-color: #3F51B5;
+        color: white;
+    }
+
+    .buttons-pdf {
+        background-color: #E91E63;
+        color: white;
+    }
+
+    .buttons-excel {
+        background-color: #FF5722;
+        color: white;
+    }
+
+
+    .navbar-default .navbar-toggle {
+        border-color: transparent;
+        color: #fff !important;
+    }
+</style>
+
+@Html.Partial("_Menu")
+<br />
+<div class="container-fluid">
+  
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Forms</label>
+                    <select id="EventReport" class="form-control"></select>
+                </div>
+                <div class="col-md-12" id="vmCluster_Head">
+                    <label>Head</label>
+                    <select id="Cluster_HeadReport" class="form-control"></select>
+                </div>
+                <div class="col-md-12">
+                    <label>Year</label>
+                    <select id="Report_Year" class="form-control">
+                        <option value="2023-2024">2023-2024 </option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Type</label>
+                    <select id="Payment_StatusReport" class="form-control">
+                        <option value="CASH">CASH</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Institute</label>
+                    <select id="Report_Institute" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Course</label>
+                    <select id="Report_Course" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <br />
+                    <br />
+                    <span style="font-size:14px;">
+                        <span class="fa  fa-square color3"></span> &nbsp;Incharge Verification Pending &nbsp;&nbsp;<br />
+                        <span class="fa  fa-square color11"></span> &nbsp;Incharge Verified and Account Pending &nbsp;&nbsp;<br />
+                        <span class="fa  fa-square color12"></span> &nbsp;Incharge Verified and Account Confirmed
+
+
+                    </span>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <br />
+            <div class="row form-group">
+                <div class="col-md-12" id="vmtblMoreReport">
+
+                    <table class="table table-hover" id="tblListingReport">
+                        <thead style="background-color: #4267B2; color: white;">
+                            <tr>
+                                <th>Slno</th>
+                                <th>Application_No</th>
+                                <th>Name</th>
+                                <th>Mobileno</th>
+                                <th>Payment</th>
+                                <th>Bank_Transactionid</th>
+                                <th>Amount</th>
+                                <th>Transaction_Date</th>
+                                <th>Gender</th>
+                                <th>Division</th>
+                                <th>State</th>
+                                <th>District</th>
+                                <th>Taluka</th>
+                                <th>College</th>
+                                <th>isVerified</th>
+                                <th>Verified_Date</th>
+                                <th>Verified_By</th>
+                                <th>Sync</th>
+                                <th>SyncDate</th>
+                                <th>Status</th>
+                                <th>Qualification</th>
+                                <th>Year_Of_Passing</th>
+                                <th>Father_Name</th>
+                                <th>Father_Contact</th>
+                                <th>isBacklogs</th>
+                                <th>Backlogs_nos</th>
+                                <th>Source</th>
+                                @*<th>Institution_Name</th>
+                                    <th>Admission_Year</th>
+                                    <th>Program_Name</th>
+                                    <th>Degree_Name</th>
+                                    <th>Reporting_Managers</th>*@
+                                <th>Reference_Name</th>
+                                <th>isCash Received</th>
+                                <th>Cash Received Date</th>
+                                <th>Cash Received By</th>
+
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" id="vmtblLessReport">
+                    <div class="container center-block" style="margin-top:10%;">
+                        <div class="panel" style="background-color: lemonchiffon;">
+                            <div class="panel-body">
+                                <h2 class="text-center">
+                                    Sorry... 😐 there is no data found.
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Html.Partial("_Footer")
+
+<script src="~/Content/js/_Load_Event_Location.js"></script>
+@*<script src="~/Content/js/1.11.1jquery.min.js"></script>
+    <script src="~/Content/js/bootstrap.min.js"></script>*@
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+
+<link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+<script>
+    $(document).ready(function () {
+
+        var d1 = new Date();
+        $.when(LoadEventMasterReport(), LoadCamuClusterHeadReport(), LoadCamuInstituteReport()).done(function () {
+            LoadCamuCashRegistrationReport();
+        });
+
+
+
+    });
+
+    function LoadCamuInstituteReport() {
+        $("#Report_Institute").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuInstitutionsVerification',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Report_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    LoadCamuProgramReport();
+
+                }
+                else if (data.length > 1) {
+                    /*   $("#Verification_Institute").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Report_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+
+                }
+                else {
+                    error("Configure the Institute", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Institute" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+    $("#Report_Institute").change(function () {
+        $("#Report_Course").empty();
+
+        LoadCamuProgramReport();
+        LoadCamuCashRegistrationReport();
+
+    });
+
+    function LoadCamuProgramReport() {
+        $("#Report_Course").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuProgramVerification',
+            data: { Institute_Id: $("#Report_Institute").val() },
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Report_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+
+                }
+                else if (data.length > 1) {
+                    /*  $("#Verification_Course").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Report_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+
+                }
+                else {
+                    error("Configure the Courses", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Courses" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+    $("#Report_Course").change(function () {
+        LoadCamuCashRegistrationReport();
+    });
+    function LoadCamuClusterHeadReport() {
+        $("#Cluster_HeadReport").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/CashReg/GetClusterHead',
+            data: {},
+            success: function (data) {
+                if (data.length > 0) {  
+                    $.each(data, function (i, obj) {
+                        $("#Cluster_HeadReport").append('<option value="' + obj.User_Id + '">' + obj.UserName + '</option>');                     
+                        })                    
+
+                }                
+                else {
+                    error("Finds more than one staff", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Staffs" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    $("#Cluster_HeadReport").change(function () {
+        LoadCamuCashRegistrationReport();
+    });
+    function LoadEventMasterReport() {
+        $("#EventReport").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuEventMaster',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        if (obj.status == 'There are no forms') {
+                            $("#EventReport").append('<option value="">[Select]</option>');
+
+                        }
+                        else {
+                            $("#EventReport").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                        }
+
+                    });
+
+                }
+                else if (data.length > 1) {
+                    $("#EventReport").append('<option value="">[Select]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#EventReport").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                    });
+
+
+                }
+                else {
+                    error("Event forms not configured", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Events" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+
+
+    function LoadCamuCashRegistrationReport() {
+        $("#tblListingReport tbody").empty();
+        $("#tblListingReport tbody").html("");
+        $("#loader").show();
+
+        var table = '';
+        if ($("#EventReport").val() != null) {
+
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                url: '/CashReg/GetCashRegistrationReportList',
+                data: { Event_Id: $("#EventReport").val(), Cluster_Head: $("#Cluster_HeadReport").val(), PaymentStatus: $("#Payment_StatusReport").val(), Academic_Year: $("#Report_Year").val(), Institute_Id: $("#Report_Institute").val(), Course_Id: $("#Report_Course").val() },
+                success: function (data) {
+                    $('#tblListingReport').DataTable().destroy();
+                    $("#tblListingReport tbody").html("");
+                    $.each(data, function (i, obj) {
+
+                        if (obj.status == 'There are no students') {
+                            $("#vmtblMoreReport").hide();
+                            $("#vmtblLessReport").show();
+
+                            error(obj.status, "topCenter");
+
+                            $("#tblListingReport tbody").empty();
+                            $("#tblListingReport tbody").html("");
+                            $("#loader").hide();
+                        }
+                        else {
+
+                            if (obj.isCashReceived == "Yes") {
+                                if (obj.Verified_By == "Yes") {
+                                    table += "<tr class='bg12 color25'>";
+                                }
+                                else {
+                                    table += "<tr class='bg11 color25'>";
+                                }
+                            }
+                            else {
+                                table += "<tr class='bg3 color25'>";
+                            }
+
+
+                            $("#vmtblMoreReport").show();
+                            $("#vmtblLessReport").hide();
+                            table += "<td>" + (i + 1) + "</td>";
+                            table += "<td>" + obj.Application_No + "</td>";
+                            table += "<td>" + obj.Name + "</td>";
+                            table += "<td>" + obj.Contact_No + "</td>";
+                            table += "<td>" + obj.isPayment_Completed + "</td>";
+                            table += "<td>" + obj.Bank_Transaction_Id + "</td>";
+                            table += "<td>" + obj.Transaction_Amount + "</td>";
+                            table += "<td>" + obj.Transaction_Date + "</td>";
+                            table += "<td>" + obj.Gender + "</td>";
+                            table += "<td>" + obj.Division_Name + "</td>";
+                            table += "<td>" + obj.State + "</td>";
+                            table += "<td>" + obj.District + "</td>";
+                            table += "<td>" + obj.Taluka + "</td>";
+                            table += "<td>" + obj.College_Name + "</td>";
+                            table += "<td>" + obj.isVerified + "</td>";
+                            table += "<td>" + obj.Verified_Date + "</td>";
+                            table += "<td>" + obj.Verified_By + "</td>";
+                            table += "<td>" + obj.SyncToCamu + "</td>";
+                            table += "<td>" + obj.Sync_Date + "</td>";
+                            table += "<td>" + obj.Application_Status + "</td>";
+                            table += "<td>" + obj.Qualification + "</td>";
+                            table += "<td>" + obj.Year_Of_Passing + "</td>";
+                            table += "<td>" + obj.Father_Name + "</td>";
+                            table += "<td>" + obj.Father_Contact + "</td>";
+                            table += "<td>" + obj.isBacklogs + "</td>";
+                            table += "<td>" + obj.Backlogs_nos + "</td>";
+                            table += "<td>" + obj.Source + "</td>";
+                            //table += "<td>" + obj.Institution_Name + "</td>";
+                            //table += "<td>" + obj.Admission_Year + "</td>";
+                            //table += "<td>" + obj.Program_Name + "</td>";
+                            //table += "<td>" + obj.Degree_Name + "</td>";
+                            //table += "<td>" + obj.Reporting_Managers + "</td>";
+                            table += "<td>" + obj.Reference_Name + "</td>";
+                            table += "<td>" + obj.isCashReceived + "</td>";
+                            table += "<td>" + obj.CashReceivedStatusDate + "</td>";
+                            table += "<td>" + obj.CashReceivedBy + "</td>";
+
+
+                            table += "</tr>";
+                            $("#tblListingReport tbody").html(table);
+
+                        }
+
+                    });
+                    $("#loader").hide();
+
+                    /*        $('#tblListingReport').dataTable().fnClearTable();*/
+
+
+
+                    var d = new Date();
+
+
+                    $('#tblListingReport').DataTable({
+                        dom: 'Bfrtip',
+                        destroy: 'true',
+                        retrieve: 'true',
+                        buttons: [
+                            {
+                                extend: 'print',
+                                text: '<i class="fa fa-print"> <i>',
+                                title: 'Registration_Details_' + d.toLocaleString(),
+                                orientation: 'landscape',
+                                pageSize: 'A0'
+
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                text: '<i class="fa fa-file-pdf-o"> <i>',
+                                title: 'Registration_Details_' + d.toLocaleString(),
+                                orientation: 'landscape',
+                                pageSize: 'A0'
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                text: '<i class="fa fa-file-excel-o"> <i>',
+                                title: 'Registration_Details_' + d.toLocaleString(),
+                                download: 'open',
+                            }
+                        ],
+                        "bAutoWidth": true,
+                        "sScrollY": "550px",
+                        "sScrollX": "100%",
+                        "bScrollCollapse": true,
+                        "bSort": true,
+                        "iDisplayLength": 50,
+                        "bLengthChange": false,
+                    });
+                    $("#loader").hide();
+                },
+                error: function (ex) {
+
+                    error("Failed to Load Staffs" + ex.Message, "topCenter");
+                    $("#vmtblMoreReport").hide();
+                    $("#vmtblLessReport").show();
+                    $("#tblListingReport tbody").empty();
+                    $("#tblListingReport tbody").html("");
+                    $("#loader").hide();
+                }
+            });
+        }
+
+    }
+
+
+    $("#Payment_StatusReport").change(function () {
+        $("#loader").show();
+        LoadCamuOnlineRegistrationReport();
+        $("#loader").hide();
+    });
+</script>

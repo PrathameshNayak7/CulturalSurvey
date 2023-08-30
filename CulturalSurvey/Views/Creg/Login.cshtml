@@ -1,0 +1,195 @@
+﻿
+@{
+    ViewBag.Title = "login";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        background-image: url('../../Content/images/banner.jpg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+</style>
+<div class="bg">
+    
+    <div class="container">
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4">
+                        <br>
+                        <br>
+                      
+                        <div class="panel panel-default z-depth-1">
+                            <div class="panel-heading text-center">
+                                <img src="~/Content/images/DF_Logo.png" style="width:50%;" />
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h3 class="text-primary text-center" style="font-family: Muli;">Log in with DF Mail </h3>
+                                        <br>
+                                        <img src="~/Content/images/locker.png" style="cursor:pointer;width:60%;" class="center-block" onclick="login()" />
+                                        <br>
+                                        <a href="http://localhost:1225/Creg/SSOLogin?email=sharad.noolvi@dfmail.org">Admin SSO Login testing</a><br />
+                                        <a href="http://localhost:1225/Creg/SSOLogin?email=umesh.pujeri@dfmail.org">Cluster head SSO Login testing</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="container" style="display:none;">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 col-sm-offset-2">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">
+                            <h3>Skilling Registration</h3>
+                        </div>
+                        <div class="panel-body">
+                           
+                        </div>
+                    </div>
+                    <p align="center">
+                        <span>Best viewed in Google Chrome</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+      
+    </div>
+</div>
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.8.2.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
+<script type="text/javascript">
+
+    var OAUTHURL = 'https://accounts.google.com/o/oauth2/auth?';
+    var VALIDURL = 'https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=';
+    var SCOPE = 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+    var CLIENTID = '93339870210-ljvsghj8ptc23q0p7sdh4gd67pmbjpui.apps.googleusercontent.com';
+        //var REDIRECT = 'https://dfindia.org:81/Creg/Login';
+       // var LOGOUT = 'https://dfindia.org:81/Creg/Login';
+        
+
+        var REDIRECT = 'http://localhost:1225/Creg/Login';
+    var LOGOUT = 'http://localhost:1225/Creg/Login';
+        var TYPE = 'token';
+        var _url = OAUTHURL + 'scope=' + SCOPE + '&client_id=' + CLIENTID + '&redirect_uri=' + REDIRECT + '&response_type=' + TYPE;
+        var acToken;
+        var tokenType;
+        var expiresIn;
+        var user;
+        var loggedIn = false;
+
+        var user_email = "";
+        var user_image = "";
+        var user_name = "";
+
+        function login() {
+
+           var win = window.open(_url, "windowname1", 'width=800, height=600');
+
+          //  var win = window.location.replace(_url, "windowname1", 'width=800, height=600');
+
+            var pollTimer = window.setInterval(function () {
+                try {
+                    console.log(win.document.URL);
+                    if (win.document.URL.indexOf(REDIRECT) != -1) {
+                        window.clearInterval(pollTimer);
+                        var url = win.document.URL;
+                        acToken = gup(url, 'access_token');
+                        tokenType = gup(url, 'token_type');
+                        expiresIn = gup(url, 'expires_in');
+
+                        win.close();
+                        debugger;
+                        validateToken(acToken);
+                    }
+                }
+                catch (e) {
+
+                }
+            }, 500);
+        }
+
+        function gup(url, name) {
+            namename = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\#&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(url);
+            if (results == null)
+                return "";
+            else
+                return results[1];
+        }
+
+        function validateToken(token) {
+            getUserInfo();
+            $.ajax(
+                {
+                    url: VALIDURL + token,
+                    data: null,
+                    success: function (responseText) {
+                    },
+                });
+        }
+
+        function getUserInfo() {
+            $.ajax({
+                async: false,
+                url: 'https://www.googleapis.com/oauth2/v1/userinfo?access_token=' + acToken,
+                data: null,
+                success: function (resp) {
+                    user = resp;
+                    console.log(user);
+                    //$('#uname').html('Welcome ' + user.name);
+                    //$('#uemail').html('Email: ' + user.email)
+                    //$('#imgHolder').attr('src', user.picture);
+
+                    user_email = user.email;
+                    user_image = user.picture;
+                    user_name = user.name;
+
+                    G_login();
+                },
+            });
+        }
+
+        function G_login() {
+            $.ajax({
+                async: false,
+                url: '/Creg/GoogleLogin/',
+                type: 'POST',
+                data: {
+                    email: user_email,
+                    name: user_name,
+                    image: user_image
+                },
+                success: function (data) {
+
+                    if (data == "false") {
+                        error("User Not Registered - Invalid Access", "topCenter");
+
+                    }
+                    else {
+                        window.location.href = "/" + data + "/creg_report/";
+                    }
+                },
+            });
+        }
+
+
+</script>

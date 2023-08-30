@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewBag.Title = "Error";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+<br />
+<br />
+<div class="container">
+    <div class="card" id="vmError">
+        <div class="modal-body">
+            <div class="text-center">
+                <img src="~/Content/images/DS_Logo.png" style="height:60px;margin-top:25px;">
+            </div>
+            <hr />
+            <h1 class="text-center" style="color:#ff6633;">
+                There was an error 😒
+            </h1>
+            <br />
+            <h3 class="text-center text-danger">
+                <strong>
+                    Check sms/mail for the registration link
+                </strong>
+                <br />
+                <br />
+                <a href="https://www.deshpandefoundationindia.org/deshpande-skilling/" target="_blank" class="btn btn-sm btn-danger">Deshpande Skilling </a>
+            </h3>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>

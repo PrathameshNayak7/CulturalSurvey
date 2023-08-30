@@ -1,0 +1,1084 @@
+﻿@model CulturaSurvey.ViewModel.vmRegistration
+
+@{
+    ViewBag.Title = "RegReport";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+
+<style>
+    table tbody td {
+        white-space: nowrap
+    }
+
+    .custome-hide {
+    }
+
+    table thead th {
+        white-space: nowrap
+    }
+
+    .dt-button {
+        float: right;
+        margin-left: 9px;
+        line-height: 26px;
+        position: relative;
+        padding: 5px 22px;
+        border: 0;
+        cursor: pointer;
+        border-radius: 2px;
+        letter-spacing: 3px;
+        text-decoration: none;
+        outline: none !important;
+        -webkit-transition: 0.2s ease-out;
+        -moz-transition: 0.2s ease-out;
+        -o-transition: 0.2s ease-out;
+        /*-ms-transition: 0.2s ease-out;*/
+        transition: 0.2s ease-out;
+        font-family: Quicksand;
+        box-shadow: 0 2px 5px 0 rgb(0 0 0 / 16%), 0 2px 10px 0 rgb(0 0 0 / 12%);
+    }
+
+    .dataTables_wrapper {
+        margin-top: -48px;
+    }
+
+    .buttons-print {
+        background-color: #3F51B5;
+        color: white;
+    }
+
+    .buttons-pdf {
+        background-color: #E91E63;
+        color: white;
+    }
+
+    .buttons-excel {
+        background-color: #FF5722;
+        color: white;
+    }
+
+
+    .navbar-default .navbar-toggle {
+        border-color: transparent;
+        color: #fff !important;
+    }
+</style>
+
+
+<nav class="navbar navbar-default  " style="opacity: 0.8; z-index: 999" id="navbar">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand text-nowrap  " href="#myPage">
+                <img id="Image6" class="img-thumbnail" src="~/Content/images/Globe.png" style="height:50px;width:50px;" />
+            </a>
+            <a class="navbar-brand text-nowrap  visible-xs visible-lg brand" href="#myPage">
+                <b class="color2">  Student Self Registration Portal</b>
+            </a>
+
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav navbar-left">
+                <li><a href="#myPage">Home</a></li>
+                <li><a href="#About">About Us</a></li>
+                <li><a href="#Specialize">Our Products</a></li>
+                <li><a href="#Contact">Contact US</a></li>
+
+
+            </ul>
+        </div>
+
+</nav>
+<br />
+
+
+<div class="container-fluid">
+
+
+    <ul class="nav nav-tabs nav-fill">
+        <li class="active"><a data-toggle="tab" href="#Home" id="Verification">Verification</a></li>
+        <li><a data-toggle="tab" href="#Menu1" id="Report">Report</a></li>
+        <li><a data-toggle="tab" href="#Menu2" id="Analytics">Analytics</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+        <div id="Home" class="tab-pane fade in active">
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            <label>Select Form</label>
+                            <select id="Event" class="form-control"></select>
+                        </div>
+                        <div class="col-md-12" id="vmCluster_Head">
+                            <label>Select Head</label>
+                            <select id="Cluster_Head" class="form-control"></select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Year</label>
+                            <select id="Verification_Year" class="form-control">
+                                <option value="2023-2024">2023-2024 </option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Payment</label>
+                            <select id="Payment_Status" class="form-control">
+                                @*<option value="11">[All]</option>*@
+                                <option value="1">Paid</option>
+                                <option value="0" style="display:none;">Un-Paid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Institute</label>
+                            <select id="Verification_Institute" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Course</label>
+                            <select id="Verification_Course" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Search</label>
+                            <input type="text" class="form-control" id="txtSearch" name="Search" placeholder="Search by name / mobile / state / district / etc...." autocomplete="off" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <br />
+                    <div class="row form-group">
+                        <div class="col-md-12" id="vmtblMore" style="overflow:auto;min-height:150px;max-height:550px;">
+                            <table class="table table-bordered" id="tblListing">
+                                <thead>
+                                    <tr>
+                                        <th>Slno</th>
+                                        <th>Name</th>
+                                        <th>Mobileno</th>
+                                        <th class="custome-hide">Payment</th>
+                                        <th class="custome-hide">Bank_Transactionid</th>
+                                        <th class="custome-hide">Amount</th>
+                                        <th class="custome-hide">Transaction_Date</th>
+                                        <th>State</th>
+                                        <th>District</th>
+                                        <th>Taluka</th>
+                                        <th>College</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12" id="vmtblLess">
+                            <div class="container center-block" style="margin-top:10%;">
+                                <div class="panel" style="background-color: lemonchiffon;">
+                                    <div class="panel-body">
+                                        <h2 class="text-center">
+                                            Sorry... 😐 there is no data found.
+
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div id="Menu1" class="tab-pane fade">
+
+            <h4 class="text-center">
+                <i class="color3 "> For paid/unpaid Students - Every 1 mins data will sync with camu</i>
+
+            </h4>
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Forms</label>
+                            <select id="EventReport" class="form-control"></select>
+                        </div>
+                        <div class="col-md-12" id="vmCluster_Head">
+                            <label>Head</label>
+                            <select id="Cluster_HeadReport" class="form-control"></select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Year</label>
+                            <select id="Report_Year" class="form-control">
+                                <option value="2023-2024">2023-2024 </option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Type</label>
+                            <select id="Payment_StatusReport" class="form-control">
+                                <option value="2">[All]</option>
+                                <option value="1">Paid</option>
+                                <option value="0">Un-Paid</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Institute</label>
+                            <select id="Report_Institute" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <label>Course</label>
+                            <select id="Report_Course" class="form-control">
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <br />
+                            <br />
+                            <span style="font-size:14px;">
+                                <span class="fa  fa-square color3"></span> &nbsp;Verification Pending &nbsp;&nbsp;<br />
+                                <span class="fa  fa-square color11"></span> &nbsp;Verified and Sync Pending &nbsp;&nbsp;<br />
+                                <span class="fa  fa-square color12"></span> &nbsp;Verified and Sync
+
+
+                            </span>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10">
+                    <br />
+                    <div class="row form-group">
+                        <div class="col-md-12" id="vmtblMoreReport">
+
+                            <table class="table table-hover" id="tblListingReport">
+                                <thead style="background-color: #4267B2; color: white;">
+                                    <tr>
+                                        <th>Slno</th>
+                                        <th>Application_No</th>
+                                        <th>Name</th>
+                                        <th>Mobileno</th>
+                                        <th>Payment</th>
+                                        <th>Bank_Transactionid</th>
+                                        <th>Amount</th>
+                                        <th>Transaction_Date</th>
+                                        <th>Gender</th>
+                                        <th>Division</th>
+                                        <th>State</th>
+                                        <th>District</th>
+                                        <th>Taluka</th>
+                                        <th>College</th>
+                                        <th>isVerified</th>
+                                        <th>Verified_Date</th>
+                                        <th>Verified_By</th>
+                                        <th>Sync</th>
+                                        <th>SyncDate</th>
+                                        <th>Status</th>
+                                        <th>Qualification</th>
+                                        <th>Year_Of_Passing</th>
+                                        <th>Father_Name</th>
+                                        <th>Father_Contact</th>
+                                        <th>isBacklogs</th>
+                                        <th>Backlogs_nos</th>
+                                        <th>Source</th>
+                                        <th>Institution_Name</th>
+                                        <th>Admission_Year</th>
+                                        <th>Program_Name</th>
+                                        <th>Degree_Name</th>
+                                        <th>Reporting_Managers</th>
+                                        <th>Reference_Name</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12" id="vmtblLessReport">
+                            <div class="container center-block" style="margin-top:10%;">
+                                <div class="panel" style="background-color: lemonchiffon;">
+                                    <div class="panel-body">
+                                        <h2 class="text-center">
+                                            Sorry... 😐 there is no data found.
+
+                                        </h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div id="Menu2" class="tab-pane fade">
+
+            <h4 class="color3 text-center">Data will refresh Every 2 Hours</h4>
+            <div class="row">
+                <div class="col-md-12">
+                    <iframe style="height: 750px; width:100%;border:0px;" src="https://analytics.zoho.in/open-view/286995000000304934/9253e31a505f16b53e6d06cd25de6819"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="mdlStudent" tabindex="-1" role="dialog" aria-labelledby="mdlStudent" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mdlStudentName"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="vwPersonal">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label><span style="color:red;">*</span> First Name </label>
+                            <input type="text" id="FirstName" class="form-control" placeholder="First Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>    Last Name
+                            </label>
+                            <input type="text" id="LastName" class="form-control" placeholder="Last Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><span style="color:red;">*</span>  Full Name (As per 10th Marks Card) </label>
+                            <input type="text" id="FullName" class="form-control" placeholder="Name as per 10th mark card" autocomplete="off" onkeyup="this.value=this.value.replace(/[^a-zA-Z ]/g,'');" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>    DOB <span id="_age" class="colo3"></span> Years
+                            </label>
+                            <input type="date" id="DOB" class="form-control date" min="1990-01-01" max="2005-12-31" placeholder="DOB" autocomplete="off" />
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.Contact_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Contact_No, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact No", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+                            @*<label>Contact No</label>
+                                <input type="text" id="ContactNo" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label style="color:red;">*</label>
+
+                            @Html.LabelFor(m => m.Email_Id, new { @class = "control-label", })
+                            @Html.EditorFor(m => m.Email_Id, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Email Id", @onkeyup = "this.value=this.value.toLowerCase();" } })
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <label> <span style="color:red;">*</span>Gender</label>
+                            <br />
+                            <input type="radio" name="Gender" id="Male" value="Male">
+                            <label for="Male"> Male</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Female" name="Gender" value="Female">
+                            <label for="Female"> Female</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Trans" name="Gender" value="Trans">
+                            <label for="Trans"> Trans</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  Qualification</label>
+                            <select class="form-control" id="Qualification">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Year of Passing</label>
+                            <select class="form-control" id="Yearofpassing">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>   Father/Guardian Name
+                            </label>
+                            <input type="text" id="MiddleName" class="form-control" placeholder="Father/Guardian Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6">
+
+                            @Html.LabelFor(m => m.Whatsapp_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Whatsapp_No, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Contact No", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  State</label>
+                            <select class="form-control" id="State_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  District</label>
+                            <select class="form-control" id="District_Id">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Taluka/City</label>
+                            <select class="form-control" id="Taluka_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  College Type</label>
+                            <select class="form-control" id="CourseType">
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12" id="vwclgdropdown">
+                            <label><span style="color:red;">*</span>College </label>
+                            <select class="form-control" id="College_Id" style="font-size: smaller;">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  How you know about </label>
+                            <select class="form-control" id="Source">
+                                <option value="">[Select]</option>
+                                <option value="Orientation">Orientation</option>
+                                <option value="Website">Website</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Twitter">Twitter</option>
+                                <option value="Whatsapp">Whatsapp</option>
+                                <option value="Alumni">Alumni</option>
+                                <option value="Refered by friend">Referred by friend</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label> <span style="color:red;">*</span>Any Backlogs</label>
+                            <br />
+                            <input type="radio" id="BNo" name="Backlog" value="No">
+                            <label for="BNo"> No</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="Backlog" id="BYes" value="Yes">
+                            <label for="BYes"> Yes</label>
+                        </div>
+                        <div class="col-md-3" style="display:none;" id="vmTotalBacklogs">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.BYesNumber, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.BYesNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Backlogs", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "1" } })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-title">
+                        <h3 class="color8">
+                            Application/Enquiry Process
+                        </h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <label><span style="color:red;">*</span>Center</label>
+                            <select class="form-control" id="Institute">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span> Course</label>
+                            <select class="form-control" id="Program">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span> Fellowship</label>
+                            <select class="form-control" id="Degree">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Admission Year</label>
+                            <select class="form-control" id="AdmissionYear">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  Incharge</label>
+                            <select class="form-control" id="Incharge">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Reference Name</label>
+                            <input type="text" id="ReferenceName" placeholder="Reference Name" autocomplete="off" class="form-control" />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                            <div class="col-md-6">
+                                <label> <span style="color:red;">*</span>Transaction Type</label>
+                                <br />
+                                <input type="radio" id="BOnline" name="Online" value="Online">
+                                <label for="BNo"> No</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" name="Backlog" id="BYes" value="Yes">
+                                <label for="BYes"> Yes</label>
+                            </div>
+                        </div>*@
+
+                </div>
+                <br />
+                <div id="vwPayment" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-2">
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn bg1 color25" id="btnSaveOnly">Verify and Close</button>
+                <button type="button" class="btn bg3 color25" id="btnFinalSave" style="display:none;">Save and Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" value="@ViewBag.hdnEventId" id="hdnEventId" />
+<input type="hidden" value="@ViewBag.hdnisCollegeDropdown" id="hdnisCollegeDropdown" />
+<input type="hidden" value="@ViewBag.hdnisCamuRegistration" id="hdnisCamuRegistration" />
+<input type="hidden" value="@ViewBag.hdnRID" id="hdnRID" />
+<input type="hidden" value="@ViewBag.hdnForm" id="hdnForm" />
+<input type="hidden" value="@ViewBag.hdnFees" id="hdnFees" />
+<input type="hidden" value="@ViewBag.hdnisAdmin" id="hdnisAdmin" />
+<script src="~/Content/js/_Load_Event_Location.js"></script>
+@*These .css and .js used for Autocomplete*@
+
+
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js"></script>
+
+<link href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css" />
+
+
+
+<link href="https://ajax.aspnetcdn.com/ajax/jquery.ui/1.9.2/themes/blitzer/jquery-ui.css"
+      rel="Stylesheet" type="text/css" />
+<script src="~/Content/js/bootstrap.js"></script>
+
+
+<script>
+    $(function () {
+
+        $("#DOB").on('change', function () {
+            var today = new Date();
+            var nowyear = today.getFullYear();
+            var nowmonth = today.getMonth();
+            var nowday = today.getDate('dd-mm-yyyy');
+            var dob = $("#DOB").val();
+            //var d = new Date(dob);
+            //var d = new Date(dob.split("-").reverse().join("-"));
+            var d = new Date(dob);
+            var birthyear = d.getFullYear();
+            var birthmonth = d.getMonth() + 1;
+            var birthday = d.getDate();
+            var age = nowyear - birthyear;
+            var age_month = nowmonth - birthmonth;
+            var age_day = nowday - birthday;
+            if (age_month < 0 || (age_month == 0 && age_day < 0)) {
+                age = parseInt(age) - 1;
+            }
+            document.getElementById("_age").innerHTML = age;
+
+        });
+    });
+
+
+</script>
+
+<script>
+    // prevent forms from auto submitting on all inputs
+    $(document).on("keydown", "input", function (e) {
+        if (e.which == 13) e.preventDefault();
+    });
+    $(document).ready(function () {
+        var d1 = new Date();
+        LoadEventMaster();
+        LoadCamuClusterHead();
+        LoadCamuInstituteVerification();
+        LoadCamuOnlineRegistration();
+
+    });
+
+    $('#refresh').click(function () {
+        location.reload();
+    });
+
+    $("#Verification").click(function () {
+        $("#Home").show();
+        $("#Menu1").hide();
+        $("#Menu2").hide();
+    });
+
+    $("#btnFinalSave").click(function () {
+
+        $("#btnFinalSave").addClass('disabled');
+        $("#loader").show();
+        if (RegFormValidation() > 0) {
+
+        }
+        else {
+            $("#btnFinalSave").removeClass('disabled');
+        }
+        $("#loader").hide();
+    });
+
+    $("#btnSaveOnly").click(function () {
+
+        $("#btnSaveOnly").addClass('disabled');
+        $("#loader").show();
+        if (RegFormValidation() > 0) {
+            Save_Registration();
+        }
+        else {
+            $("#btnSaveOnly").removeClass('disabled');
+        }
+        $("#loader").hide();
+    });
+
+    function RegFormValidation() {
+        var status = 0;
+        var t = $('#AssetNumber').val();
+
+        if ($('#FirstName').val() == '') {
+            status = 0;
+            info("Enter First Name", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        if ($('#FirstName').val().length < 3) {
+            status = 0;
+            info("Enter Min 3 Letter", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        else if ($('#LastName').val() == '') {
+            status = 0;
+            info("Enter Last Name", "topCenter");
+            $('#LastName').focus();
+            return status;
+        }
+        else if ($('#FullName').val() == '') {
+            status = 0;
+            info("Enter Name as per 10th mark sheet", "topCenter");
+            $('#FullName').focus();
+            return status;
+        }
+        else if ($('#DOB').val() == '') {
+            status = 0;
+            info("Select DOB", "topCenter");
+            $('#DOB').focus();
+            return status;
+        }
+
+        else if ($('#Contact_No').val() == '') {
+            status = 0;
+            info("Enter Contact Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if (($('#Contact_No').val().length < 10) || ($('#Contact_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if ($('#Email_Id').val() == '') {
+            status = 0;
+            info("Enter Mail Id", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if (IsEmail($('#Email_Id').val()) == false) {
+            status = 0;
+            info("invalid email", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if ($("input[name='Gender']:checked").val() == undefined) {
+            status = 0;
+            info("select the Gender", "topCenter");
+            $('#Gender').focus();
+            return status;
+        }
+        else if ($('#Qualification').val() == '' || $('#Qualification').val() == '0' || $('#Qualification').val() == null) {
+            status = 0;
+            info("Select Qualification", "topCenter");
+            $('#Qualification').focus();
+            return status;
+        }
+        else if ($('#Yearofpassing').val() == '') {
+            status = 0;
+            info("Select Year of passing", "topCenter");
+            $('#Yearofpassing').focus();
+            return status;
+        }
+
+        else if ($('#MiddleName').val() == '') {
+            status = 0;
+            info("Enter Father/Guardian Name", "topCenter");
+            $('#MiddleName').focus();
+            return status;
+        }
+        else if (($('#Whatsapp_No').val() != '') && ($('#Whatsapp_No').val().length < 10) || ($('#Whatsapp_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Father/Guardian Number", "topCenter");
+            $('#Whatsapp_No').focus();
+            return status;
+        }
+        else if ($('#State_Id').val() == '' || $('#State_Id').val() == null) {
+            status = 0;
+            info("Select your State", "topCenter");
+            $('#State_Id').focus();
+            return status;
+        }
+        else if ($('#District_Id').val() == '' || $('#District_Id').val() == null) {
+            status = 0;
+            info("Select your District", "topCenter");
+            $('#District_Id').focus();
+            return status;
+        }
+        else if ($('#Taluka_Id').val() == '' || $('#Taluka_Id').val() == null) {
+            status = 0;
+            info("Select your Taluka", "topCenter");
+            $('#Taluka_Id').focus();
+            return status;
+        }
+        else if ($('#Village_Id').val() == '' && $("#isCamuRegistration").val() == "0") {
+            status = 0;
+            info("Select your Village", "topCenter");
+            $('#Village_Id').focus();
+            return status;
+        }
+        else if ($('#CourseType').val() == '' || $('#CourseType').val() == null) {
+            status = 0;
+            info("Select Course Type", "topCenter");
+            $('#CourseType').focus();
+            return status;
+        }
+        else if ($('#College_Id').val() == '' || $('#College_Id').val() == null) {
+            status = 0;
+            info("Please Select the College", "topCenter");
+            $('#College_Id').focus();
+            return status;
+        }
+
+        else if ($('#Source').val() == '') {
+            status = 0;
+            info("Select the Source", "topCenter");
+            $('#Source').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == undefined) {
+            status = 0;
+            info("select the Backlogs", "topCenter");
+            $('#Backlog').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == 'Yes' && $("#BYesNumber").val() == "") {
+            info("Enter No of Backlogs", "topCenter");
+            $('#BYesNumber').focus();
+            status = 0;
+            return status;
+        }
+        else if ($("#Institute").val() == '' || $('#Institute').val() == null) {
+            status = 0;
+            info("Select the Centre", "topCenter");
+            $('#Institute').focus();
+            return status;
+        }
+        else if ($("#Program").val() == '' || $('#Program').val() == null) {
+            status = 0;
+            info("Select the Fellowship", "topCenter");
+            $('#Program').focus();
+            return status;
+        }
+        else if ($("#Degree").val() == '' || $('#Degree').val() == null) {
+            status = 0;
+            info("Select the Course", "topCenter");
+            $('#Degree').focus();
+            return status;
+        }
+
+        else if ($("#AdmissionYear").val() == '' || $('#AdmissionYear').val() == null) {
+            status = 0;
+            info("Select the Admission Year", "topCenter");
+            $('#AdmissionYear').focus();
+            return status;
+        }
+        else if ($("#Incharge").val() == '' || $('#Incharge').val() == null) {
+            status = 0;
+            info("Select the Incharge", "topCenter");
+            $('#Incharge').focus();
+            return status;
+        }
+        else if ($("#ReferenceName").val() == '') {
+            status = 0;
+            info("Enter the Reference Name", "topCenter");
+            $('#ReferenceName').focus();
+            return status;
+        }
+        else {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    function Save_Registration() {
+
+        $("#loader").show();
+
+        var Backlogs = "0";
+        var isBacklogs = 0;
+
+
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            isBacklogs = 1;
+            Backlogs = $("#BYesNumber").val();
+        }
+        else {
+            isBacklogs = 0;
+            Backlogs = "0";
+        }
+        var vmA = {
+            'Event_Id': $("#Event").val(),
+            'Registration_Id': $("#hdnRID").val(),
+            'First_Name': $('#FirstName').val(),
+            'Last_Name': $('#LastName').val(),
+            'Name_On_Certificate': $('#FullName').val(),
+            'DOB': $('#DOB').val(),
+            'Age': $("#_age").html(),
+            'Contact_No': $('#Contact_No').val(),
+            'Email_Id': $('#Email_Id').val(),
+            'Gender': $("input[name='Gender']:checked").val(),
+            'Qualification_Id': $('#Qualification').val(),
+            'Year_Of_Passing': $('#Yearofpassing').val(),
+            'Middle_Name': $('#MiddleName').val(),
+            'Whatsapp_No': $('#Whatsapp_No').val(),
+            'State_Id': $('#State_Id').val(),
+            'District_id': $('#District_Id').val(),
+            'Taluka_Id': $('#Taluka_Id').val(),
+            'College_Type_Id': $("#CourseType").val(),
+            'College_Id': $('#College_Id').val(),
+            'BYN': isBacklogs,
+            'BYesNumber': Backlogs,
+            'Source': $('#Source').val(),
+            'Institution_Id': $('#Institute').val(),
+            'Program_Id': $('#Program').val(),
+            'Degree_Id': $('#Degree').val(),
+            'Academic_Id': $('#AdmissionYear').val(),
+            'Incharge_Id': $('#Incharge').val(),
+            'Reference_Name': $('#ReferenceName').val()
+        };
+
+
+        $.post("/Creg/Save_Registration_ClusterHead", { Reg: vmA }, function (res) {
+            $("#loader").show();
+            if (res.Status == true) {
+                $("#mdlStudent").modal("hide");
+                success("Verification successful ! soon data will sync with camu", "topCenter");
+                $("#btnSaveOnly").removeClass('disabled');
+                //location.reload();
+                LoadCamuOnlineRegistration();
+                // window.location.replace("/Creg/Reg?RID=" + res.Message).delay(3000);
+
+
+                $("#loader").hide();
+                return;
+            }
+        }, "json");
+
+        return false;
+    }
+
+    function Get_Student_Details(registrationId) {
+
+        $('#loader').show();
+
+        LoadCamuState();
+        LoadCamuCourseType();
+        LoadCamuInstitute();
+        LoadCamuQualificationClusterHead();
+        $("#hdnRID").val(registrationId);
+        GetRegistration(registrationId);
+
+
+    }
+    function GetRegistration(Reg) {
+        $('#loader').show();
+        $.get("/Creg/GetMoreRegistrationDetails", { Registration_Id: Reg }, function (data) {
+            if (data.Message == "success") {
+
+                $("input[name=Agree][value='1']").prop('checked', true);
+                if (data.list.BYN == "Yes") {
+                    $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+
+                    $("#vmTotalBacklogs").show();
+
+                    $('#BYesNumber').val(data.list.BYesNumber);
+                }
+                else {
+                    $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+                    $("#vmTotalBacklogs").hide();
+                }
+                $('#FirstName').val(data.list.First_Name);
+                $('#LastName').val(data.list.Last_Name);
+
+
+
+                $("#mdlStudentName").html(data.list.First_Name + " " + data.list.Last_Name);
+                $('#FullName').val(data.list.Name_On_Certificate);
+                $('#DOB').val(data.list.DOB);
+                document.getElementById("_age").innerHTML = data.list.Age;
+                $('#Contact_No').val(data.list.Contact_No);
+                $('#Email_Id').val(data.list.Email_Id);
+                $('input[name="Gender"][value="' + data.list.Gender + '"]').attr('checked', true);
+                $('#Qualification').val(data.list.Qualification_Id);
+                $('#Yearofpassing').val(data.list.Year_Of_Passing);
+                $('#MiddleName').val(data.list.Middle_Name);
+                $('#Whatsapp_No').val(data.list.Whatsapp_No);
+                $('#State_Id').val(data.list.State_Id);
+                LoadCamuDistrict();
+                $('#District_Id').val(data.list.District_id);
+                LoadCamuTaluka();
+                $('#Taluka_Id').val(data.list.Taluka_Id);
+                $('#CourseType').val(data.list.College_Type_Id);
+                LoadCamuColleges();
+                $('#College_Id').val(data.list.College_Id);
+                $('#Source').val(data.list.Source);
+                LoadCamuInstitute();
+                $('#Institute').val(data.list.Institution_Id);
+                LoadCamuProgram();
+                $('#Program').val(data.list.Program_Id);
+                LoadCamuDegree();
+                $('#Degree').val(data.list.Degree_Id);
+
+                LoadCamuAcademic();
+                $('#AdmissionYear').val(data.list.Academic_Id);
+                LoadCamuStaffs();
+                $('#Incharge').val(data.list.Incharge_Id);
+                $('#ReferenceName').val(data.list.Reference_Name);
+                $("#vwPersonal").show();
+                $("#vwPayment").show();
+                $("#mdlStudent").modal("show");
+                $('#loader').hide();
+
+                return false;
+            }
+            else {
+                error(data.message, "topCenter");
+                $('#loader').hide();
+            }
+        }, "json");
+    }
+
+    $("input[name='Backlog']").click(function () {
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            $("#vmTotalBacklogs").show("slow");
+        }
+        else {
+            $("#vmTotalBacklogs").hide("slow");
+        }
+    });
+
+    $("#Analytics").click(function () {
+        $("#Menu2").show();
+        $("#Home").hide();
+        $("#Menu1").hide();
+
+        if ($("#hdnisAdmin").val() == "0") {
+            info("Only Admin Can Access", "topCenter");
+
+        }
+    });
+
+    $("#Report").click(function () {
+        $("#Menu1").show();
+        $("#Home").hide();
+        $("#Menu2").hide();
+
+        LoadEventMasterReport();
+        LoadCamuClusterHeadReport();
+        LoadCamuInstituteReport();
+        LoadCamuOnlineRegistrationReport();
+
+
+    });
+
+    function IsEmail(email) {
+        var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!regex.test(email)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>
+<script type="text/javascript">
+    $("#txtSearch").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tblListing tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+
+</script>
+
+

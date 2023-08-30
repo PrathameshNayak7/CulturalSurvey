@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewBag.Title = "Cash_Report";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+<style>
+    html,
+    body,
+    .intro {
+        height: 100%;
+    }
+
+    table td,
+    table th {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    thead th {
+        color: #fff;
+    }
+
+    .card {
+        border-radius: .5rem;
+    }
+
+    .table-scroll {
+        border-radius: .5rem;
+    }
+
+        .table-scroll table thead th {
+            font-size: 1.25rem;
+        }
+
+    thead {
+        top: 0;
+        position: sticky;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h2>Cash Report</h2>
+        </div>
+    </div>
+</div>
+
+
+<section class="intro">
+    <div class="bg-image h-100" style="background-color: #f5f7fa;">
+        <div class="mask d-flex align-items-center h-100">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body p-0">
+                                <div class="table-responsive table-scroll" data-mdb-perfect-scrollbar="true" style="position: relative; height: 700px">
+                                    <div class="col-md-9">
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input id="myInput" class="form-control" type="text" placeholder="Search..">
+                                    </div>
+                                    
+                                    <table class="table table-striped mb-0" id="tblCash_Report">
+                                        <thead style="background-color: #002d72;">
+                                            <tr>
+                                                <th scope="col">Sl No</th>
+                                                <th scope="col">Incharge Name</th>
+                                                <th scope="col">Total Reg</th>
+                                                <th scope="col">Recieve Confirmation Pending</th>
+                                                <th scope="col">Confirmation Pending Amt</th>
+                                                <th scope="col">Recieved Count</th>
+                                                <th scope="col">Collected Amount</th>
+                                                <th scope="col">Deposited Amt</th>
+                                                <th scope="col">Deposite Pending</th>
+                                                <th scope="col">Account Confirmaed</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function () {
+        $("#tblCash_Report tbody").html("");
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'GET',
+            dataType: 'json',
+            url: '/CashReg/Cash_Summary',
+            data: {},
+            success: function (data) {
+                var table;
+                if (data.length > 0) {
+                    $.each(data, function (i, obj) {
+                        table += "<tr>";
+                        table += "<td>" + (i + 1) + "</td>";
+                        table += "<td>" + obj.UserName + "</td>";
+                        table += "<td>" + obj.Total_Registrations + "</td>";
+                        table += "<td>" + obj.Receive_Confirmation_Pending + "</td>";
+                        table += "<td>" + obj.Confirmation_Pending_Amt + "</td>";
+                        table += "<td>" + obj.Recieved_Count + "</td>";
+                        table += "<td>" + obj.Collected_Amount + "</td>";
+                        table += "<td>" + obj.Deposited_Amt + "</td>";
+                        table += "<td>" + obj.Deposite_Pending + "</td>";
+                        table += "<td>" + obj.Account_Confirmaed + "</td>";
+                        table += "</tr>";
+                    });
+                    $("#tblCash_Report tbody").html(table);
+                }
+                else {
+                    $("#tblCash_Report tbody").html("");
+                    error("No Data Found In The Table","topCenter");
+                }
+            },
+            error: function (ex) {
+                $("#tblCash_Report tbody").html("");
+                error("Failed to Load Cash Table" + ex.Message, "topCenter");               
+            }
+        });
+    });
+
+
+
+    $("#myInput").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tblCash_Report tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+</script>

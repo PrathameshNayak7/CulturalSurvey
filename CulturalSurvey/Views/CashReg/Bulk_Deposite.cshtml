@@ -1,0 +1,448 @@
+﻿
+@{
+    ViewBag.Title = "Bulk_Deposite";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+<style>
+    #btnSave {
+        line-height: 17px;
+        display: none;
+    }
+
+    #btnClear {
+        line-height: 17px;
+    }
+</style>
+@Html.Partial("_Menu")
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Forms</label>
+                    <select id="EventReport" class="form-control"></select>
+                </div>
+                <div class="col-md-12" id="vmCluster_Head">
+                    <label>Head</label>
+                    <select id="Cluster_HeadReport" class="form-control"></select>
+                </div>
+                <div class="col-md-12">
+                    <label>Year</label>
+                    <select id="Report_Year" class="form-control">
+                        <option value="2023-2024">2023-2024 </option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Type</label>
+                    <select id="Payment_StatusReport" class="form-control">
+                        <option value="CASH">CASH</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Institute</label>
+                    <select id="Report_Institute" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Course</label>
+                    <select id="Report_Course" class="form-control">
+                    </select>
+                </div>
+               
+            </div>
+        </div>
+        <div class="col-md-10">
+            <br />
+            <div class="row form-group">                
+                <div class="col-md-12" id="vmtblMoreReport">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                <input id="hdn_Id" value="0" style="display:none" />
+                                <label>Pay Amount*</label>
+                                <input disabled class="form-control" id="Pay_AmtID" type="text" />
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Payment Type*</label>
+                                <select class="form-control" id="Pay_TypeID">
+                                    <option value="0">SELECT</option>
+                                    <option value="CASH">CASH</option>
+                                    <option value="UPI">UPI</option>
+                                    <option value="BAnk Transfer">Bank Transfer</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label>Payment Remarks*</label>
+                                <input id="Pay_RemarksID" class="form-control" />
+                            </div>
+
+                            <div class="col-md-1">
+                                <label></label>
+                                <a class="btn btn-success form-control" id="btnSave">ADD</a>
+                            </div>                            
+                        </div>
+                    </div>
+                    @*<a class="btn btn-primary" id="btnSave">Submit</a>*@
+                    <br />
+                    <br />
+                    <table class="table table-hover" id="tblListing">
+                        <thead class="table table-bordered">
+                            <tr>
+                                <th>Slno</th>
+                                <th><input id="selectAllStudent" type="checkbox" /></th>
+                                <th>Name</th>
+                                <th>Mobileno</th>
+                                @*<th>Payment</th>*@
+                                <th>Amount</th>
+                                <th>Transaction_Date</th>
+                                <th>State</th>
+                                <th>District</th>
+                                <th>Taluka</th>
+                                <th>College</th>
+                                <th>Created_Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" id="vmtblLessReport">
+                    <div class="container center-block" style="margin-top:10%;">
+                        <div class="panel" style="background-color: lemonchiffon;">
+                            <div class="panel-body">
+                                <h2 class="text-center">
+                                    Sorry... 😐 there is no data found.
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+
+        var d1 = new Date();
+        $.when(LoadEventMasterReport(), LoadCamuClusterHeadReport(), LoadCamuInstituteReport()).done(function () {
+            LoadStudentList();
+        });
+
+
+
+    });
+
+    function LoadCamuInstituteReport() {
+        $("#Report_Institute").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuInstitutionsVerification',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Report_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    LoadCamuProgramReport();
+
+                }
+                else if (data.length > 1) {
+                    /*   $("#Verification_Institute").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Report_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+
+                }
+                else {
+                    error("Configure the Institute", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Institute" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+    $("#Report_Institute").change(function () {
+        $("#Report_Course").empty();
+
+        LoadCamuProgramReport();
+        LoadStudentList();
+
+    });
+
+    function LoadCamuProgramReport() {
+        $("#Report_Course").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuProgramVerification',
+            data: { Institute_Id: $("#Report_Institute").val() },
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Report_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+
+                }
+                else if (data.length > 1) {
+                    /*  $("#Verification_Course").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Report_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+
+                }
+                else {
+                    error("Configure the Courses", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Courses" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+    $("#Report_Course").change(function () {
+        LoadStudentList();
+    });
+    function LoadCamuClusterHeadReport() {
+        $("#Cluster_HeadReport").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/CashReg/GetClusterHead',
+            data: {},
+            success: function (data) {
+                if (data.length > 0) {
+                    $.each(data, function (i, obj) {
+                        $("#Cluster_HeadReport").append('<option value="' + obj.User_Id + '">' + obj.UserName + '</option>');
+                    })
+
+                }
+                else {
+                    error("Finds more than one staff", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Staffs" + ex.Message, "topCenter");
+            }
+        });
+    }
+
+    $("#Cluster_HeadReport").change(function () {
+        LoadStudentList();
+    });
+    function LoadEventMasterReport() {
+        $("#EventReport").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuEventMaster',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        if (obj.status == 'There are no forms') {
+                            $("#EventReport").append('<option value="">[Select]</option>');
+
+                        }
+                        else {
+                            $("#EventReport").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                        }
+
+                    });
+
+                }
+                else if (data.length > 1) {
+                    $("#EventReport").append('<option value="">[Select]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#EventReport").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                    });
+
+
+                }
+                else {
+                    error("Event forms not configured", "topCenter");
+
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Events" + ex.Message, "topCenter");
+
+            }
+        });
+    }
+
+
+    function LoadStudentList() {
+        $("#tblListing tbody").empty();
+        $("#tblListing tbody").html("");
+        $("#loader").show();
+        $("#vmtblLessReport").hide();
+        if ($("#EventReport").val() != null) {
+
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                url: '/CashReg/GetStudentsList',
+                data: { Event_Id: $("#EventReport").val(), Cluster_Head: $("#Cluster_HeadReport").val(), PaymentStatus: $("#Payment_StatusReport").val(), Academic_Year: $("#Report_Year").val(), Institute_Id: $("#Report_Institute").val(), Course_Id: $("#Report_Course").val() },
+                success: function (data) {
+                    $("#tblListing tbody").html("");
+                    if (data.length > 0) {
+                        $.each(data, function (i, obj) {
+                            $("#tblListing tbody").append('<tr><td>' + (i + 1) + '</td><td><input class="student-checkbox" value="' + obj.Registration_Id + '" data-amount="' + obj.Transaction_Amount + '" type="checkbox" /></td><td>' + obj.Name + '</td><td>' + obj.Contact_No + '</td><td>' + obj.Transaction_Amount + '</td><td>' + obj.Transaction_Date + '</td><td>' + obj.State + '</td><td>' + obj.District + '</td><td>' + obj.Taluka + '</td><td>' + obj.College_Name + '</td><td>' + obj.Created_Date + '</td></tr>');
+
+                        });
+                        $("#loader").hide();
+                    }
+                    else {
+                        $("#vmtblLessReport").show();
+                        $("#loader").hide();
+                        $("#vmtblMoreReport").hide();
+                    }
+                   
+                },
+                error: function (ex) {
+
+                    error("Failed to Load Staffs" + ex.Message, "topCenter");
+                    $("#vmtblMoreReport").hide();
+                    $("#vmtblLessReport").show();
+                    $("#tblListing tbody").empty();
+                    $("#tblListing tbody").html("");
+                    $("#loader").hide();
+                }
+            });
+        }
+
+    }
+
+
+    var selectedStudentData = [];
+
+    $(document).on('change', '#selectAllStudent', function () {       
+        
+        var isChecked = $(this).prop('checked');
+        $('.student-checkbox').prop('checked', isChecked);
+        if (isChecked) {
+            selectedStudentData = $('.student-checkbox').map(function () {
+                return {
+                    Registration_Id: $(this).val(),
+                    Amount: $(this).data("amount")
+                };
+            }).get();
+        } else {
+            selectedStudentData = [];
+        }
+
+        if (selectedStudentData.length > 0) {
+            $('#btnSave').show();
+        } else {
+            $('#btnSave').hide();
+        }
+
+        $("#Pay_AmtID").val("");
+        const totalAmount = selectedStudentData.reduce((sum, item) => sum + item.Amount, 0);
+        $("#Pay_AmtID").val(totalAmount); 
+    });
+
+    $(document).on('change', '.student-checkbox', function () {
+        const registrationId = $(this).val();
+        const transactionAmount = $(this).data("amount");
+        /*var isChecked = $(this).val();*/
+        if ($(this).prop('checked')) {
+            selectedStudentData.push({
+                Registration_Id: registrationId,
+                Amount: transactionAmount
+            });
+        } else {
+            selectedStudentData = selectedStudentData.filter(function (students) {
+                return students.Registration_Id !== registrationId;
+            });
+        }
+
+        var allChecked = $('.student-checkbox:checked').length === $('.student-checkbox').length;
+        $('#selectAllStudent').prop('checked', allChecked);
+
+        if (selectedStudentData.length > 0) {
+            $('#btnSave').show();
+        } else {
+            $('#btnSave').hide();
+        }
+        $("#Pay_AmtID").val(""); 
+        const totalAmount = selectedStudentData.reduce((sum, item) => sum + item.Amount, 0);
+        $("#Pay_AmtID").val(totalAmount); 
+    });
+
+    
+
+
+    $("#btnSave").click(function () {
+        if ($("#Pay_AmtID").val() != "" && $("#Pay_TypeID").val() != 0 && $("#Pay_RemarksID").val() != "") {
+            if (selectedStudentData.length > 0) {
+                $.ajax({
+                    cache: false,
+                    async: false,
+                    type: 'POST',
+                    url: '/CashReg/Bulk_Amount_Submission',
+                    data: { SelectedValues: selectedStudentData, Pay_Amount: $("#Pay_AmtID").val(), Payment_Type: $("#Pay_TypeID").val(), Payment_Remark: $("#Pay_RemarksID").val() },
+                    success: function (data) {
+                        if (data.status = "success") {
+                            success("Data Updated Successfully", "topCenter");
+                            $("#btnSave").hide();
+                            selectedStudentData = [];
+                            LoadStudentList();
+                        }
+                    },
+                    error: function (ex) {
+                        error("Failed to Save Cash Details" + ex.Message, "topCenter");
+                    }
+                });
+            }
+            else {
+                error("Please Select The Students", "topCenter");
+            }
+        }
+        else {
+            if ($("#Pay_AmtID").val() == "") {
+                error("Fill Amount", "topCenter");
+            }
+            else if ($("#Pay_TypeID").val() == 0) {
+                error("Select Deposite Type", "topCenter");
+            }
+            else if ($("#Pay_RemarksID").val() == "") {
+                error("Fill Remarks", "topCenter");
+            }
+        }
+       
+    });
+
+</script>
+
+
+

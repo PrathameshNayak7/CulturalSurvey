@@ -1,0 +1,298 @@
+﻿
+@{
+    ViewBag.Title = "AddCash";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+
+@Html.Partial("_MenuField")
+<br />
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-md-4 col-xs-6">
+            <label>Student Name</label>
+            <input type="text" id="txtName" class="form-control" autocomplete="off" placeholder="Student Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/gi,'');" />
+        </div>
+        <div class="col-md-4 col-xs-6">
+            <label>Student Mobileno</label>
+            <input type="text" id="txtMobileNo" placeholder="10 digit mobile no" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" maxlength="10" class="form-control" autocomplete="off" />
+        </div>
+        <div class="col-md-2 col-xs-6">
+            <br />
+            <a href="#" class="btn btn-block btn-m bg1 color25" id="btnSave">&nbsp; Submit</a> &nbsp;
+
+        </div>
+        <div class="col-md-2 col-xs-6">
+            <br />
+
+            <a href="#" class="btn  btn-block btn-m bg3 color25" id="btnReset">&nbsp; Rest</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-6">
+            <label>Year</label>
+            <select class="form-control" id="ddlYear">
+                <option value="2023-2024">2023-2024</option>
+            </select>
+
+        </div>
+        <div class="col-xs-6">
+            <label>Search</label>
+            <input type="text" class="form-control" id="txtSearch" name="Search" placeholder="Search by name / mobile / date...." autocomplete="off" />
+
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12" style="height:400px;overflow:auto;">
+            <table class="table table-bordered" id="tblListing">
+                <thead>
+                    <tr>
+                        <th>
+                            Slno
+                        </th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Mobileno
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                    
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="pop_MobileValidation">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="POP_title">Alert</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h2 class="color3">
+                                       Student details already exists Database
+                </h2>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg3 color25" data-dismiss="modal">Close</button>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@Html.Partial("_Footer")
+<input type="hidden" value="@ViewBag.hdnRID" id="hdnRID" />
+<script>
+    $(document).ready(function () {
+        var d1 = new Date();
+        LoadCashList();
+    });
+</script>
+
+
+<script>
+    $(function () {
+        $(document).on('click', '[id*="tblListing"] tr:not(:first)', function () {
+            $('#loader').show();
+            $(this).addClass('selectedCell').siblings().removeClass('selectedCell');
+            var Id = $(this).closest('tr').find('label[id*="lbl_Id"]').text();
+            var Name = $(this).closest('tr').find('label[id*="lbl_Name"]').text();
+            var Mobileno = $(this).closest('tr').find('label[id*="lbl_MobileNo"]').text();
+            $('#hdnRID').val(Id)
+            $("#txtName").val(Name);
+            $("#txtMobileNo").val(Mobileno);
+            $('#loader').hide();
+        });
+      
+    });
+</script>
+<script>
+    $("#btnReset").click(function () {
+        $("#hdnRID").val("0");
+        $("#txtName").val('');
+        $("#txtMobileNo").val('');
+    });
+    $("#btnSave").click(function () {
+        $("#loader").show();
+        $("#btnSave").addClass('disabled');
+        if (formValidation() > 0) {
+            if ($("#hdnRID").val()=='') {
+                Mobile_Validation();
+            }
+            else {
+                Save();
+            }
+           
+       
+        }
+        else {
+            $("#btnSave").removeClass('disabled');
+        }
+        $("#loader").hide();
+
+    });
+    function Mobile_Validation() {
+        $.get("/Creg/CashAddGetMobile_Validation", { Name: $('#txtName').val(), Mobile_No: $('#txtMobileNo').val() }, function (data) {
+            if (data.Message == "Exists") {
+                $('#pop_MobileValidation').modal('show');
+                $("#btnSave").removeClass('disabled');
+            }
+            else if (data.Message == "NotExists") {
+                Save();
+            }
+            else {
+                error("Error :" + data.Message, "topCenter");
+            }
+            return false;
+
+        }, "json");
+    }
+    function formValidation() {
+        var status = 0;
+
+        if ($('#txtName').val() == '') {
+            status = 0;
+            info("Enter Student Name", "topCenter");
+            $('#txtName').focus();
+            return status;
+        }
+        if ($('#txtName').val().length < 3) {
+            status = 0;
+            info("Enter Min 3 Letter", "topCenter");
+            $('#txtName').focus();
+            return status;
+        }
+        else if ($('#txtMobileNo').val() == '') {
+            status = 0;
+            info("Enter Contact Number", "topCenter");
+            $('#txtMobileNo').focus();
+            return status;
+        }
+        else if (($('#txtMobileNo').val().length < 10) || ($('#txtMobileNo').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Number", "topCenter");
+            $('#txtMobileNo').focus();
+            return status;
+        }
+        else {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    $("#ddlYear").change(function () {
+        LoadCashList();
+    });
+
+    function Save() {
+        $("#loader").show();
+
+
+        var vmA = {
+            'Id': $("#hdnRID").val(),
+            'Name': $('#txtName').val(),
+            'MobileNo': $('#txtMobileNo').val(),
+        };
+
+        $.post("/Creg/Save_CashReceived", { Reg: vmA }, function (res) {
+            $("#loader").show();
+            if (res.Status == true) {
+                success("Saved successful ! ", "topCenter");
+
+                $("#txtName").val('');
+                $("#txtMobileNo").val('');
+                $("#hdnRID").val("0");
+                $("#btnSave").removeClass('disabled');
+                LoadCashList();
+
+                $("#loader").hide();
+                return;
+            }
+        }, "json");
+
+        return false;
+        $("#loader").hide();
+    }
+
+    function LoadCashList() {
+        $("#tblListing tbody").empty();
+        $("#tblListing tbody").html("");
+
+        var table = '';
+        var counter = 1;
+
+        $('#loader').show();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetAdd_CashList',
+            data: { Academic_Year: $("#ddlYear").val(), Type: 'AddList' },
+            success: function (data) {
+
+                $.each(data, function (i, obj) {
+
+                    if (obj.status == 'No data') {
+                        error("No Data Added", "topCenter");
+                        $('#loader').hide();
+                    }
+                    else {
+
+                        table += "<tr style='cursor:pointer;'>";
+
+                        table += "<td>" + (counter) + "</td>";
+                        table += '<td><label id="lbl_Name">' + obj.Name + '</label></td>';      
+                        table += '<td><label id="lbl_MobileNo">' + obj.MobileNo + '</label></td>';
+                        table += "<td>" + obj.Created_Date + "</td>";
+                        table += '<td style="display:none;"><label id="lbl_Id">' + obj.Id + '</label></td>';                       
+                        $('#loader').hide();
+                        table += "</tr>";
+                        counter = counter + 1;
+
+
+                    }
+                    $("#tblListing tbody").html(table);
+                });
+
+
+                $('#loader').hide();
+            },
+            error: function (ex) {
+
+                error("Failed to Load Staffs" + ex.Message, "topCenter");
+
+                $('#loader').hide();
+            }
+        });
+
+    }
+</script>
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>
+<script type="text/javascript">
+    $("#txtSearch").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tblListing tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+</script>

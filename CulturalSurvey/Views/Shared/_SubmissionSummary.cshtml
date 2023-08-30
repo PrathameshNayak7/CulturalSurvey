@@ -1,0 +1,92 @@
+﻿
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="text-center text-primary">Survey Summary</h3>
+        </div>
+    </div>
+    <hr />
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card bg-warning">
+                    <div class="modal-body">
+                        <h3 class="text-center">
+                            Participants -  <b><span id="participants">0</span></b>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-success">
+                    <div class="modal-body">
+                        <h3 class="text-center">
+                            Submitted  -  <b><span id="submitted">0</span></b>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card bg-danger">
+                    <div class="modal-body">
+                        <h3 class="text-center" >
+                            Pending  -  <b><span id="pending">0</span></b>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="modal-body">
+                        <div class="progress">
+                            <div id="completedprogress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+</div>
+<br />
+<script>
+    $(document).ready(function () {
+        LoadSummary();
+    });
+
+    function LoadSummary() {
+        $.ajax({
+            beforeSend: function () {
+                $('#loader').show();
+            },
+            complete: function () {
+                $('#loader').hide();
+            },
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Survey/Get_Survey_Summary',
+            data: {},
+            success: function (data) {
+                if (data.list != null) {
+                    let complete_percentage = data.list.CompletionPercentage;
+                
+                    $("#participants").html(data.list.Participants);
+                    $("#submitted").html(data.list.Submitted);
+                    $("#pending").html(data.list.Pending);
+                    $("#completedprogress").append('<div class="progress-bar progress-bar-success" style="width:' + complete_percentage + '%" ><b>' + complete_percentage + '% Completed</b></div>');
+                }
+                else {
+                    error("Fail to load Summary", "topCenter");
+                }
+            },
+            error: function (ex) {
+                error(" Failed to Load Summary" +  ex.Message, "topCenter");
+                $('#loader').hide();
+            }
+        });
+    }
+</script>
+

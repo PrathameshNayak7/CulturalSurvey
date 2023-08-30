@@ -1,0 +1,78 @@
+﻿@model CulturaSurvey.ViewModel.PaymentResponseViewModel
+@{
+    ViewBag.Title = "GetPaytmResponse";
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+<style>
+</style>
+
+<br />
+<div class="container-fluid">
+    <div class="card bg4" id="vmSubmitted">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-1 text-center">
+                    <img src="~/Content/images/DS_Logo.png" style="height:60px;margin-top:25px;">
+                </div>
+                <div class="col-md-11">
+                    <h1 class="text-center color25">
+                        @ViewBag.Message
+                    </h1>
+                    <h3 class="text-center color25">
+                        <strong>
+
+                            @ViewBag.ErrorDetail
+                        </strong>
+                        <br />
+                        <br />
+                        <a href="https://www.deshpandefoundationindia.org/deshpande-skilling/" target="_blank" class="btn btn-sm btn-primary">Deshpande Skilling </a>
+                    </h3>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <hr />
+    <div class="row" id="selections">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-5">
+                    @Html.Partial("_Registration_Feedback")
+                </div>
+                <div class="col-md-7" id="transaction">
+                    <ul class="list-group">
+                        <li class="list-group-item"> @Html.LabelFor(m => m.MID) |  @Html.DisplayFor(m => m.MID)</li>
+                        <li class="list-group-item">  @Html.LabelFor(m => m.ORDERID) |  @Html.DisplayFor(m => m.ORDERID)</li>
+              
+                        <li class="list-group-item">  @Html.LabelFor(m => m.TXNAMOUNT) |  @Html.DisplayFor(m => m.TXNAMOUNT)</li>
+                        <li class="list-group-item">   @Html.LabelFor(m => m.TXNID) |     @Html.DisplayFor(m => m.TXNID) </li>
+                        <li class="list-group-item">@Html.LabelFor(m => m.BANKTXNID) |@Html.DisplayFor(m => m.BANKTXNID) </li>
+                        <li class="list-group-item"> @Html.LabelFor(m => m.STATUS) |  @Html.DisplayFor(m => m.STATUS)</li>
+                        <li class="list-group-item" style="display:none;"> @Html.LabelFor(m => m.RESPCODE) |  @Html.DisplayFor(m => m.RESPCODE)</li>
+                        <li class="list-group-item">@Html.LabelFor(m => m.RESPMSG) |  @Html.DisplayFor(m => m.RESPMSG)</li>
+                        <li class="list-group-item">  @Html.LabelFor(m => m.TXNDATE) |  @Html.DisplayFor(m => m.TXNDATE)</li>
+                        <li class="list-group-item" style="display:none;"> @Html.LabelFor(m => m.GATEWAYNAME) | @Html.DisplayFor(m => m.GATEWAYNAME)</li>
+                        <li class="list-group-item" style="display:none;">@Html.LabelFor(m => m.BANKNAME) |    @Html.DisplayFor(m => m.BANKNAME)</li>
+                        <li class="list-group-item"> @Html.LabelFor(m => m.PAYMENTMODE) |  @Html.DisplayFor(m => m.PAYMENTMODE)</li>
+                        <li class="list-group-item" style="overflow-wrap: break-word;display:none;"> @Html.LabelFor(m => m.CHECKSUMHASH) |  @Html.DisplayFor(m => m.CHECKSUMHASH)</li>
+                    </ul>
+
+              
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>

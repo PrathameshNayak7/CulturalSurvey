@@ -1,0 +1,1073 @@
+﻿@model CulturaSurvey.ViewModel.vmRegistration
+@{
+    Layout = "~/Views/Shared/_ResponsePage.cshtml";
+}
+@Html.Partial("_Menu")
+
+<style>
+    .modal.modal-fullscreen .modal-dialog {
+        width: 100vw;
+        height: 100vh;
+        margin: 0;
+        padding: 0;
+        max-width: none;
+    }
+
+    .modal.modal-fullscreen .modal-content {
+        height: auto;
+        height: 100vh;
+        border-radius: 0;
+        border: none;
+    }
+
+    .modal.modal-fullscreen .modal-body {
+        overflow-y: auto;
+    }
+</style>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="row form-group">
+                <div class="col-md-12">
+                    <label>Select Form</label>
+                    <select id="Event" class="form-control"></select>
+                </div>
+                <div class="col-md-12" id="vmCluster_Head">
+                    <label>Select Head</label>
+                    <select id="Cluster_Head" class="form-control"></select>
+                </div>
+                <div class="col-md-12">
+                    <label>Year</label>
+                    <select id="Verification_Year" class="form-control">
+                        <option value="2023-2024">2023-2024 </option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Payment</label>
+                    <select id="Payment_Status" class="form-control">
+                        @*<option value="11">[All]</option>*@
+                        <option value="1">Paid</option>
+                        <option value="0" style="display:none;">Un-Paid</option>
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Institute</label>
+                    <select id="Verification_Institute" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Course</label>
+                    <select id="Verification_Course" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-12">
+                    <label>Search</label>
+                    <input type="text" class="form-control" id="txtSearch" name="Search" placeholder="Search by name / mobile / state / district / etc...." autocomplete="off" />
+
+                </div>
+             
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="panel z-depth-1">
+                        <div class="panel-body text-center">
+                            <span>Total: </span><b><label id="lblDisplayCount" class="color14"></label></b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <br />
+            <div class="row form-group">
+                <div class="col-md-12" id="vmtblMore" style="overflow:auto;min-height:150px;max-height:550px;">
+                    <table class="table table-bordered" id="tblListing">
+                        <thead>
+                            <tr>
+                                <th>Slno</th>
+                                <th>Name</th>
+                                <th>Mobileno</th>
+                                <th class="custome-hide">Payment</th>
+                                <th class="custome-hide">Bank_Transactionid</th>
+                                <th class="custome-hide">Amount</th>
+                                <th class="custome-hide">Transaction_Date</th>
+                                <th>State</th>
+                                <th>District</th>
+                                <th>Taluka</th>
+                                <th>College</th>
+                                <th>Created_Date</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-md-12" id="vmtblLess">
+                    <div class="container center-block" style="margin-top:10%;">
+                        <div class="panel" style="background-color: lemonchiffon;">
+                            <div class="panel-body">
+                                <h2 class="text-center">
+                                    Sorry... 😐 there is no data found.
+
+                                </h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="mdlStudent" tabindex="-1" role="dialog" aria-labelledby="mdlStudent" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mdlStudentName"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="vwPersonal">
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            <label><span style="color:red;">*</span> First Name </label>
+                            <input type="text" id="FirstName" class="form-control" placeholder="First Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>    Last Name
+                            </label>
+                            <input type="text" id="LastName" class="form-control" placeholder="Last Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label><span style="color:red;">*</span>  Full Name (As per 10th Marks Card) </label>
+                            <input type="text" id="FullName" class="form-control" placeholder="Name as per 10th mark card" autocomplete="off" onkeyup="this.value=this.value.replace(/[^a-zA-Z ]/g,'');" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>    DOB <span id="_age" class="colo3"></span> Years
+                            </label>
+                            <input type="date" id="DOB" class="form-control date" min="1990-01-01" max="2005-12-31" placeholder="DOB" autocomplete="off" />
+
+                        </div>
+
+                        <div class="col-md-6">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.Contact_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Contact_No, new { htmlAttributes = new { @class = "form-control", @placeholder = "Contact No", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+                            @*<label>Contact No</label>
+                                <input type="text" id="ContactNo" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label style="color:red;">*</label>
+
+                            @Html.LabelFor(m => m.Email_Id, new { @class = "control-label", })
+                            @Html.EditorFor(m => m.Email_Id, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Email Id", @onkeyup = "this.value=this.value.toLowerCase();" } })
+
+                        </div>
+                        <div class="col-md-6">
+
+                            <label> <span style="color:red;">*</span>Gender</label>
+                            <br />
+                            <input type="radio" name="Gender" id="Male" value="Male">
+                            <label for="Male"> Male</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Female" name="Gender" value="Female">
+                            <label for="Female"> Female</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" id="Trans" name="Gender" value="Trans">
+                            <label for="Trans"> Trans</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  Qualification</label>
+                            <select class="form-control" id="Qualification">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Year of Passing</label>
+                            <select class="form-control" id="Yearofpassing">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                                <option value="2022">2022</option>
+                                <option value="2021">2021</option>
+                                <option value="2020">2020</option>
+                                <option value="2019">2019</option>
+                                <option value="2018">2018</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label>
+                                <span style="color:red;">*</span>   Father/Guardian Name
+                            </label>
+                            <input type="text" id="MiddleName" class="form-control" placeholder="Father/Guardian Name" onkeyup="this.value=this.value.toUpperCase();this.value=this.value.replace(/[^a-zA-Z ]/g,'');" autocomplete="off" />
+                        </div>
+                        <div class="col-md-6">
+
+                            @Html.LabelFor(m => m.Whatsapp_No, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Whatsapp_No, new { htmlAttributes = new { @class = "form-control", @autocomplete = "off", @placeholder = "Contact No", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "10" } })
+
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  State</label>
+                            <select class="form-control" id="State_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  District</label>
+                            <select class="form-control" id="District_Id">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Taluka/City</label>
+                            <select class="form-control" id="Taluka_Id">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  College Type</label>
+                            <select class="form-control" id="CourseType">
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-12" id="vwclgdropdown">
+                            <label><span style="color:red;">*</span>College </label>
+                            <select class="form-control" id="College_Id" style="font-size: smaller;">
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  How you know about </label>
+                            <select class="form-control" id="Source">
+                                <option value="">[Select]</option>
+                                <option value="Orientation">Orientation</option>
+                                <option value="Website">Website</option>
+                                <option value="Facebook">Facebook</option>
+                                <option value="Instagram">Instagram</option>
+                                <option value="Twitter">Twitter</option>
+                                <option value="Whatsapp">Whatsapp</option>
+                                <option value="Alumni">Alumni</option>
+                                <option value="Refered by friend">Referred by friend</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label> <span style="color:red;">*</span>Any Backlogs</label>
+                            <br />
+                            <input type="radio" id="BNo" name="Backlog" value="No">
+                            <label for="BNo"> No</label>
+                            &nbsp;&nbsp;
+                            <input type="radio" name="Backlog" id="BYes" value="Yes">
+                            <label for="BYes"> Yes</label>
+                        </div>
+                        <div class="col-md-3" style="display:none;" id="vmTotalBacklogs">
+                            <label style="color:red;">*</label>
+                            @Html.LabelFor(m => m.BYesNumber, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.BYesNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Backlogs", @autocomplete = "off", @onkeyup = "this.value=this.value.replace(/[^0-9]/g,'');", @maxlength = "1" } })
+                        </div>
+                    </div>
+                    <br />
+                    <div class="modal-title">
+                        <h3 class="color8">
+                            Application/Enquiry Process
+                        </h3>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 ">
+                            <label><span style="color:red;">*</span>Center</label>
+                            <select class="form-control" id="Institute">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span> Course</label>
+                            <select class="form-control" id="Program">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span> Fellowship</label>
+                            <select class="form-control" id="Degree">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Admission Year</label>
+                            <select class="form-control" id="AdmissionYear">
+                                <option value="">[Select]</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label> <span style="color:red;">*</span>  Incharge</label>
+                            <select class="form-control" id="Incharge">
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label><span style="color:red;">*</span>  Reference Name</label>
+                            <input type="text" id="ReferenceName" placeholder="Reference Name" autocomplete="off" class="form-control" />
+                        </div>
+                    </div>
+                    @*<div class="row">
+                            <div class="col-md-6">
+                                <label> <span style="color:red;">*</span>Transaction Type</label>
+                                <br />
+                                <input type="radio" id="BOnline" name="Online" value="Online">
+                                <label for="BNo"> No</label>
+                                &nbsp;&nbsp;
+                                <input type="radio" name="Backlog" id="BYes" value="Yes">
+                                <label for="BYes"> Yes</label>
+                            </div>
+                        </div>*@
+
+                </div>
+                <br />
+                <div id="vwPayment" style="display:none;">
+                    <div class="row">
+                        <div class="col-md-2">
+
+                        </div>
+                        <div class="col-md-2">
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn bg1 color25" id="btnSaveOnly">Verify and Close</button>
+                <button type="button" class="btn bg3 color25" id="btnFinalSave" style="display:none;">Save and Verify</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-fullscreen fade" id="pop_Celebration" >
+    <div class="modal-dialog modal-lg " role="document" >
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src="~/Content/images/Celebration.gif" style="width: 96vw; height: 90vh; z-index: 0;" />
+                <div class="carousel-caption">
+                    <h1 style="margin-bottom:10px;" class="color1">Congratulations !!!</h1>
+                    <h1 style="margin-bottom:300px;" class="color10">For Reaching 1000 Registration with Rs. 100000 collection</h1>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class=" bg3 color25" data-dismiss="modal"><span class="fa fa-close"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("_Footer")
+<input type="hidden" value="@ViewBag.hdnEventId" id="hdnEventId" />
+<input type="hidden" value="@ViewBag.hdnisCollegeDropdown" id="hdnisCollegeDropdown" />
+<input type="hidden" value="@ViewBag.hdnisCamuRegistration" id="hdnisCamuRegistration" />
+<input type="hidden" value="@ViewBag.hdnRID" id="hdnRID" />
+<input type="hidden" value="@ViewBag.hdnForm" id="hdnForm" />
+<input type="hidden" value="@ViewBag.hdnFees" id="hdnFees" />
+<input type="hidden" value="@ViewBag.hdnisAdmin" id="hdnisAdmin" />
+<script src="~/Content/js/_Load_Event_Location.js"></script>
+
+
+
+<script>
+    // prevent forms from auto submitting on all inputs
+    $(document).on("keydown", "input", function (e) {
+        if (e.which == 13) e.preventDefault();
+    });
+    $(document).ready(function () {
+        var d1 = new Date();
+        $.when(LoadEventMaster(), LoadCamuClusterHead(), LoadCamuInstituteVerification()).done(function () {
+            LoadCamuOnlineRegistration();
+        }); 
+   
+        $('#pop_Celebration').modal('show');
+        setTimeout(function () {
+            $('#pop_Celebration').modal('hide');
+        }, 15000)
+    });
+    $("#Verification_Institute").change(function () {
+        $("#Verification_Course").empty();
+        LoadCamuProgramVerification();
+    });
+    function LoadCamuProgramVerification() {
+        $("#Verification_Course").empty();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuProgramVerification',
+            data: { Institute_Id: $("#Verification_Institute").val() },
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    /*  $("#Verification_Course").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Course").append('<option value="' + obj.Program_Id + '">' + obj.Program_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else {
+                    error("Configure the Courses", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Courses" + ex.Message, "topCenter");
+            }
+        });
+    }
+    function LoadCamuInstituteVerification() {
+        $("#Verification_Institute").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuInstitutionsVerification',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    LoadCamuProgramVerification();
+
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    /*   $("#Verification_Institute").append('<option value="">[Select]</option>');*/
+                    $.each(data, function (i, obj) {
+                        $("#Verification_Institute").append('<option value="' + obj.Institution_Id + '">' + obj.Institution_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else {
+                    error("Configure the Institute", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Institute" + ex.Message, "topCenter");
+            }
+        });
+    }
+    $("#Verification_Course").change(function () {
+        $('#loader').show();
+        LoadCamuOnlineRegistration();
+    });
+    function LoadCamuOnlineRegistration() {
+        $("#tblListing tbody").empty();
+        $("#tblListing tbody").html("");
+        var pm = $("#Payment_Status").val();
+        if ($("#Payment_Status").val() == "0") {
+            $(".custome-hide").hide();
+        }
+        else {
+            $(".custome-hide").show();
+        }
+        var table = '';
+        var counter = 1;
+        if ($("#Event").val() != null) {
+            $('#loader').show();
+            $.ajax({
+                cache: false,
+                async: false,
+                type: 'POST',
+                dataType: 'json',
+                url: '/Creg/GetOnlineRegistrationList',
+                data: { Event_Id: $("#Event").val(), Cluster_Head: $("#Cluster_Head").val(), Payment_Status: $("#Payment_Status").val(), Academic_Year: $("#Verification_Year").val(), Institute_Id: $("#Verification_Institute").val(), Course_Id: $("#Verification_Course").val() },
+                success: function (data) {
+                    if (data.length > 1) {
+                        $("#lblDisplayCount").html(data.length);
+                    }
+                    else {
+                        $("#lblDisplayCount").html("0");
+                    }
+                    
+                    $.each(data, function (i, obj) {
+
+                        if (obj.status == 'There are no students') {
+                            $(".vmtblMore").hide();
+                            $("#vmtblLess").show();
+                            error(obj.status, "topCenter");
+                            $('#loader').hide();
+                        }
+                        else {
+                        
+                                table += "<tr onclick='Get_Student_Details(" + obj.Registration_Id + ")' style='cursor:pointer;'>";
+                                $("#vmtblMore").show();
+                                $("#vmtblLess").hide();
+                                table += "<td>" + (counter) + "</td>";
+                                table += "<td>" + obj.Name + "</td>";
+                                table += "<td>" + obj.Contact_No + "</td>";
+
+                                if ($("#Payment_Status").val() == "1") {
+
+                                    table += "<td>" + obj.isPayment_Completed + "</td>";
+                                    table += "<td>" + obj.Bank_Transaction_Id + "</td>";
+                                    table += "<td>" + obj.Transaction_Amount + "</td>";
+                                    table += "<td>" + obj.Transaction_Date + "</td>";
+                                }
+                                table += "<td>" + obj.State + "</td>";
+                                table += "<td>" + obj.District + "</td>";
+                                table += "<td>" + obj.Taluka + "</td>";
+                            table += "<td>" + obj.College_Name + "</td>";
+                            table += "<td>" + obj.Created_Date + "</td>";
+
+                                $('#loader').hide();
+                                table += "</tr>";
+                                counter = counter + 1;
+                            }
+
+                       
+                        $("#tblListing tbody").html(table);
+                    });
+
+
+                    // $("#tblListing tbody").html("");
+                    // $("#tblListing tbody").html(table);
+
+
+                    $('#loader').hide();
+                },
+                error: function (ex) {
+
+                    error("Failed to Load Staffs" + ex.Message, "topCenter");
+                    $("#vmtblMore").hide();
+                    $("#vmtblLess").show();
+                    $('#loader').hide();
+                }
+            });
+        }
+
+    }
+    $("#Event").change(function () {
+        LoadCamuClusterHead();
+        LoadCamuOnlineRegistration();
+
+    });
+
+    $("#Cluster_Head").change(function () {
+
+        LoadCamuOnlineRegistration();
+    });
+    $("#Payment_Status").change(function () {
+
+        LoadCamuOnlineRegistration();
+    });
+    $("#btnFinalSave").click(function () {
+
+        $("#btnFinalSave").addClass('disabled');
+        $("#loader").show();
+        if (RegFormValidation() > 0) {
+
+        }
+        else {
+            $("#btnFinalSave").removeClass('disabled');
+        }
+        $("#loader").hide();
+    });
+
+    $("#btnSaveOnly").click(function () {
+
+        $("#btnSaveOnly").addClass('disabled');
+        $("#loader").show();
+        if (RegFormValidation() > 0) {
+            Save_Registration();
+        }
+        else {
+            $("#btnSaveOnly").removeClass('disabled');
+        }
+        $("#loader").hide();
+    });
+    function LoadEventMaster() {
+        $("#Event").empty();
+
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/GetCamuEventMaster',
+            data: {},
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        if (obj.status == 'There are no forms') {
+                            $("#Event").append('<option value="">[Select]</option>');
+
+                        }
+                        else {
+                            $("#Event").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                        }
+
+                    });
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    $("#Event").append('<option value="">[Select]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#Event").append('<option value="' + obj.Event_Id + '">' + obj.Event_Name + '</option>');
+                    });
+
+                    $('#loader').hide();
+                }
+                else {
+                    error("Event forms not configured", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Events" + ex.Message, "topCenter");
+            }
+        });
+    }
+    function RegFormValidation() {
+        var status = 0;
+        var t = $('#AssetNumber').val();
+
+        if ($('#FirstName').val() == '') {
+            status = 0;
+            info("Enter First Name", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        if ($('#FirstName').val().length < 3) {
+            status = 0;
+            info("Enter Min 3 Letter", "topCenter");
+            $('#FirstName').focus();
+            return status;
+        }
+        else if ($('#LastName').val() == '') {
+            status = 0;
+            info("Enter Last Name", "topCenter");
+            $('#LastName').focus();
+            return status;
+        }
+        else if ($('#FullName').val() == '') {
+            status = 0;
+            info("Enter Name as per 10th mark sheet", "topCenter");
+            $('#FullName').focus();
+            return status;
+        }
+        else if ($('#DOB').val() == '') {
+            status = 0;
+            info("Select DOB", "topCenter");
+            $('#DOB').focus();
+            return status;
+        }
+
+        else if ($('#Contact_No').val() == '') {
+            status = 0;
+            info("Enter Contact Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if (($('#Contact_No').val().length < 10) || ($('#Contact_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Number", "topCenter");
+            $('#Contact_No').focus();
+            return status;
+        }
+        else if ($('#Email_Id').val() == '') {
+            status = 0;
+            info("Enter Mail Id", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if (IsEmail($('#Email_Id').val()) == false) {
+            status = 0;
+            info("invalid email", "topCenter");
+            $('#Email_Id').focus();
+            return status;
+        }
+        else if ($("input[name='Gender']:checked").val() == undefined) {
+            status = 0;
+            info("select the Gender", "topCenter");
+            $('#Gender').focus();
+            return status;
+        }
+        else if ($('#Qualification').val() == '' || $('#Qualification').val() == '0' || $('#Qualification').val() == null) {
+            status = 0;
+            info("Select Qualification", "topCenter");
+            $('#Qualification').focus();
+            return status;
+        }
+        else if ($('#Yearofpassing').val() == '') {
+            status = 0;
+            info("Select Year of passing", "topCenter");
+            $('#Yearofpassing').focus();
+            return status;
+        }
+
+        else if ($('#MiddleName').val() == '') {
+            status = 0;
+            info("Enter Father/Guardian Name", "topCenter");
+            $('#MiddleName').focus();
+            return status;
+        }
+        else if (($('#Whatsapp_No').val() != '') && ($('#Whatsapp_No').val().length < 10) || ($('#Whatsapp_No').val().length > 10)) {
+            status = 0;
+            info("Enter 10 Digit Father/Guardian Number", "topCenter");
+            $('#Whatsapp_No').focus();
+            return status;
+        }
+        else if ($('#State_Id').val() == '' || $('#State_Id').val() == null) {
+            status = 0;
+            info("Select your State", "topCenter");
+            $('#State_Id').focus();
+            return status;
+        }
+        else if ($('#District_Id').val() == '' || $('#District_Id').val() == null) {
+            status = 0;
+            info("Select your District", "topCenter");
+            $('#District_Id').focus();
+            return status;
+        }
+        else if ($('#Taluka_Id').val() == '' || $('#Taluka_Id').val() == null) {
+            status = 0;
+            info("Select your Taluka", "topCenter");
+            $('#Taluka_Id').focus();
+            return status;
+        }
+        else if ($('#Village_Id').val() == '' && $("#isCamuRegistration").val() == "0") {
+            status = 0;
+            info("Select your Village", "topCenter");
+            $('#Village_Id').focus();
+            return status;
+        }
+        else if ($('#CourseType').val() == '' || $('#CourseType').val() == null) {
+            status = 0;
+            info("Select Course Type", "topCenter");
+            $('#CourseType').focus();
+            return status;
+        }
+        else if ($('#College_Id').val() == '' || $('#College_Id').val() == null) {
+            status = 0;
+            info("Please Select the College", "topCenter");
+            $('#College_Id').focus();
+            return status;
+        }
+
+        else if ($('#Source').val() == '') {
+            status = 0;
+            info("Select the Source", "topCenter");
+            $('#Source').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == undefined) {
+            status = 0;
+            info("select the Backlogs", "topCenter");
+            $('#Backlog').focus();
+            return status;
+        }
+        else if ($("input[name='Backlog']:checked").val() == 'Yes' && $("#BYesNumber").val() == "") {
+            info("Enter No of Backlogs", "topCenter");
+            $('#BYesNumber').focus();
+            status = 0;
+            return status;
+        }
+        else if ($("#Institute").val() == '' || $('#Institute').val() == null) {
+            status = 0;
+            info("Select the Centre", "topCenter");
+            $('#Institute').focus();
+            return status;
+        }
+        else if ($("#Program").val() == '' || $('#Program').val() == null) {
+            status = 0;
+            info("Select the Fellowship", "topCenter");
+            $('#Program').focus();
+            return status;
+        }
+        else if ($("#Degree").val() == '' || $('#Degree').val() == null) {
+            status = 0;
+            info("Select the Course", "topCenter");
+            $('#Degree').focus();
+            return status;
+        }
+
+        else if ($("#AdmissionYear").val() == '' || $('#AdmissionYear').val() == null) {
+            status = 0;
+            info("Select the Admission Year", "topCenter");
+            $('#AdmissionYear').focus();
+            return status;
+        }
+        else if ($("#Incharge").val() == '' || $('#Incharge').val() == null) {
+            status = 0;
+            info("Select the Incharge", "topCenter");
+            $('#Incharge').focus();
+            return status;
+        }
+        else if ($("#ReferenceName").val() == '') {
+            status = 0;
+            info("Enter the Reference Name", "topCenter");
+            $('#ReferenceName').focus();
+            return status;
+        }
+        else {
+            status = 1;
+        }
+
+        return status;
+    }
+
+    function Save_Registration() {
+
+        $("#loader").show();
+
+        var Backlogs = "0";
+        var isBacklogs = 0;
+
+
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            isBacklogs = 1;
+            Backlogs = $("#BYesNumber").val();
+        }
+        else {
+            isBacklogs = 0;
+            Backlogs = "0";
+        }
+        var vmA = {
+            'Event_Id': $("#Event").val(),
+            'Registration_Id': $("#hdnRID").val(),
+            'First_Name': $('#FirstName').val(),
+            'Last_Name': $('#LastName').val(),
+            'Name_On_Certificate': $('#FullName').val(),
+            'DOB': $('#DOB').val(),
+            'Age': $("#_age").html(),
+            'Contact_No': $('#Contact_No').val(),
+            'Email_Id': $('#Email_Id').val(),
+            'Gender': $("input[name='Gender']:checked").val(),
+            'Qualification_Id': $('#Qualification').val(),
+            'Year_Of_Passing': $('#Yearofpassing').val(),
+            'Middle_Name': $('#MiddleName').val(),
+            'Whatsapp_No': $('#Whatsapp_No').val(),
+            'State_Id': $('#State_Id').val(),
+            'District_id': $('#District_Id').val(),
+            'Taluka_Id': $('#Taluka_Id').val(),
+            'College_Type_Id': $("#CourseType").val(),
+            'College_Id': $('#College_Id').val(),
+            'BYN': isBacklogs,
+            'BYesNumber': Backlogs,
+            'Source': $('#Source').val(),
+            'Institution_Id': $('#Institute').val(),
+            'Program_Id': $('#Program').val(),
+            'Degree_Id': $('#Degree').val(),
+            'Academic_Id': $('#AdmissionYear').val(),
+            'Incharge_Id': $('#Incharge').val(),
+            'Reference_Name': $('#ReferenceName').val()
+        };
+
+
+        $.post("/Creg/Save_Registration_ClusterHead", { Reg: vmA }, function (res) {
+            $("#loader").show();
+            if (res.Status == true) {
+                $("#mdlStudent").modal("hide");
+                success("Verification successful ! soon data will sync with camu", "topCenter");
+                $("#btnSaveOnly").removeClass('disabled');
+                //location.reload();
+                LoadCamuOnlineRegistration();
+                // window.location.replace("/Creg/Reg?RID=" + res.Message).delay(3000);
+
+
+                $("#loader").hide();
+                return;
+            }
+        }, "json");
+
+        return false;
+    }
+    function LoadCamuQualificationClusterHead() {
+        $("#Qualification").empty();
+        var event_Id = $("#Event").val();
+        $.ajax({
+            cache: false,
+            async: false,
+            type: 'POST',
+            dataType: 'json',
+            url: '/Creg/Load_Qualification',
+            data: { Event_Id: event_Id },
+            success: function (data) {
+                if (data.length == 1) {
+                    $.each(data, function (i, obj) {
+                        $("#Qualification").append('<option value="' + obj.Qualification_Id + '">' + obj.Qualification_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else if (data.length > 1) {
+                    $("#Qualification").append('<option value="">[Select]</option>');
+                    $.each(data, function (i, obj) {
+                        $("#Qualification").append('<option value="' + obj.Qualification_Id + '">' + obj.Qualification_Name + '</option>');
+                    });
+                    $('#loader').hide();
+                }
+                else {
+                    error("No Qualification Available", "topCenter");
+                    $('#loader').hide();
+                }
+            },
+            error: function (ex) {
+                error("Failed to Load Qualification" + ex.Message, "topCenter");
+            }
+        });
+    }
+    function Get_Student_Details(registrationId) {
+
+        $('#loader').show();
+
+        LoadCamuState();
+        LoadCamuCourseType();
+        LoadCamuInstitute();
+        LoadCamuQualificationClusterHead();
+        $("#hdnRID").val(registrationId);
+        GetRegistration(registrationId);
+
+
+    }
+
+
+    function GetRegistration(Reg) {
+        $('#loader').show();
+        $.get("/Creg/GetMoreRegistrationDetails", { Registration_Id: Reg }, function (data) {
+            if (data.Message == "success") {
+
+                $("input[name=Agree][value='1']").prop('checked', true);
+                if (data.list.BYN == "Yes") {
+                    $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+
+                    $("#vmTotalBacklogs").show();
+
+                    $('#BYesNumber').val(data.list.BYesNumber);
+                }
+                else {
+                    $("input[name=Backlog][value=" + data.list.BYN + "]").attr('checked', true);
+                    $("#vmTotalBacklogs").hide();
+                }
+                $('#FirstName').val(data.list.First_Name);
+                $('#LastName').val(data.list.Last_Name);
+
+
+
+                $("#mdlStudentName").html(data.list.First_Name + " " + data.list.Last_Name);
+                $('#FullName').val(data.list.Name_On_Certificate);
+                $('#DOB').val(data.list.DOB);
+                document.getElementById("_age").innerHTML = data.list.Age;
+                $('#Contact_No').val(data.list.Contact_No);
+                $('#Email_Id').val(data.list.Email_Id);
+                $('input[name="Gender"][value="' + data.list.Gender + '"]').attr('checked', true);
+                $('#Qualification').val(data.list.Qualification_Id);
+                $('#Yearofpassing').val(data.list.Year_Of_Passing);
+                $('#MiddleName').val(data.list.Middle_Name);
+                $('#Whatsapp_No').val(data.list.Whatsapp_No);
+                $('#State_Id').val(data.list.State_Id);
+                LoadCamuDistrict();
+                $('#District_Id').val(data.list.District_id);
+                LoadCamuTaluka();
+                $('#Taluka_Id').val(data.list.Taluka_Id);
+                $('#CourseType').val(data.list.College_Type_Id);
+                LoadCamuColleges();
+                $('#College_Id').val(data.list.College_Id);
+                $('#Source').val(data.list.Source);
+                LoadCamuInstitute();
+                $('#Institute').val(data.list.Institution_Id);
+                LoadCamuProgram();
+                $('#Program').val(data.list.Program_Id);
+                LoadCamuDegree();
+                $('#Degree').val(data.list.Degree_Id);
+
+                LoadCamuAcademic();
+                $('#AdmissionYear').val(data.list.Academic_Id);
+                LoadCamuStaffs();
+                $('#Incharge').val(data.list.Incharge_Id);
+                $('#ReferenceName').val(data.list.Reference_Name);
+                $("#vwPersonal").show();
+                $("#vwPayment").show();
+                $("#mdlStudent").modal("show");
+                $('#loader').hide();
+
+                return false;
+            }
+            else {
+                error(data.message, "topCenter");
+                $('#loader').hide();
+            }
+        }, "json");
+    }
+
+    $("input[name='Backlog']").click(function () {
+        if ($("input[name='Backlog']:checked").val() == 'Yes') {
+            $("#vmTotalBacklogs").show("slow");
+        }
+        else {
+            $("#vmTotalBacklogs").hide("slow");
+        }
+    });
+
+    $('#refresh').click(function () {
+        location.reload();
+    });
+
+    function IsEmail(email) {
+        var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!regex.test(email)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+
+
+
+
+
+</script>
+<script type="text/javascript">
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>
+
+<script type="text/javascript">
+    $("#txtSearch").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#tblListing tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+
+</script>

@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PD8JYLZKFZ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-PD8JYLZKFZ');
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+
+    <script src="~/Content/js/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="~/Content/js/bootstrap.js"></script>
+
+    <script src="~/Content/js/toastr-custom.js"></script>
+    <script src="~/Content/js/iziToast.min.js"></script>
+
+    <link href="~/Content/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/css/customized.css" rel="stylesheet" />
+    <link href="~/Content/css/Sharad.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/css/font-awesome-animation.css" rel="stylesheet" />
+    <link href="~/Content/css/iziToast.min.css" rel="stylesheet" />
+    <link href="~/Content/css/Style.css" rel="stylesheet" />
+
+
+
+
+    <title>@ViewBag.Title</title>
+
+    <script type="text/javascript">
+        window.onload = window.history.forward(0);
+    </script>
+    <style>
+        .rotate {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            margin-left: -60px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="loader" style="display:none;">
+        <img src="~/Content/images/loader.gif" style="width: 90px; height: 90px;" alt="Loading" />
+    </div>
+    <div>
+     
+        @RenderBody()
+    
+
+
+
+    </div>
+</body>
+
+
+</html>
+
+<script>
+
+    var status = 'online';
+    var current_status = 'online';
+
+    function check_internet_connection() {
+        if (navigator.onLine) {
+            status = 'online';
+        }
+        else {
+            status = 'offline';
+        }
+
+        if (current_status != status) {
+            if (status == 'online') {         
+                success("Hurray! Internet is connected.", "topCenter");
+            }
+            else {            
+                error("Opps! Internet is disconnected.", "topCenter");
+            }
+            current_status = status;
+        }
+    }
+
+    check_internet_connection();
+
+    setInterval(function () {
+        check_internet_connection();
+    }, 1000);
+
+</script>

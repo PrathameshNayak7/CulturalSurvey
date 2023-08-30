@@ -1,0 +1,470 @@
+
+.tile12 {
+    color: white !important;
+    background-color: #009688 !important;
+}
+
+    .tile12 a {
+        color: white !important;
+        background-color: #009688 !important;
+    }
+
+        .tile12 a:hover {
+            color: white !important;
+            background-color: #004D40 !important;
+        }
+
+    .tile12 div {
+        color: white !important;
+        background-color: #80CBC4 !important;
+        cursor: not-allowed;
+    }
+
+.tile1 {
+    color: white !important;
+    background-color: #2196F3 !important;
+}
+
+    .tile1 a { /*Red A700*/
+        color: white !important;
+        background-color: #2196F3 !important;
+    }
+
+        .tile1 a:hover {
+            color: white !important;
+            background-color: #0D47A1 !important;
+        }
+
+    .tile1 div {
+        color: white !important;
+        background-color: #64B5F6 !important;
+        cursor: not-allowed;
+    }
+
+.tile2 { /*Red A700*/
+    color: white !important;
+    background-color: #607D8B !important;
+}
+
+    .tile2 a { /*Red A700*/
+        color: white !important;
+        background-color: #607D8B !important;
+        cursor: pointer;
+    }
+
+        .tile2 a:hover {
+            color: white !important;
+            background-color: #263238 !important;
+        }
+
+    .tile2 div {
+        color: white !important;
+        background-color: #90A4AE !important;
+        cursor: not-allowed;
+    }
+
+.tile3 { /*Pink A700*/
+    color: white !important;
+    background-color: #E91E63 !important;
+}
+
+    .tile3 a { /*Red A700*/
+        color: white !important;
+        background-color: #E91E63 !important;
+    }
+
+        .tile3 a:hover {
+            color: white !important;
+            background-color: #880E4F !important;
+        }
+
+    .tile3 div {
+        color: white !important;
+        background-color: #F06292 !important;
+        cursor: not-allowed;
+    }
+
+.tile4 { /*Purple 500*/
+    color: white !important;
+    background-color: #3F51B5 !important;
+}
+.tile4:hover { 
+   border-style:solid;
+   border-color:red!important;
+   border-width:0.5px;
+}
+
+
+    .tile4 a { /*Red A700*/
+        color: white !important;
+        background-color: #3F51B5 !important;
+    }
+
+        .tile4 a:hover {
+            color: white !important;
+            background-color: #1A237E !important;
+        }
+
+    .tile4 div {
+        color: white !important;
+        background-color: #7986CB !important;
+        cursor: not-allowed;
+    }
+
+.tile5 { /*Cyan 800*/
+    color: white !important;
+    background-color: #00BCD4 !important;
+}
+
+    .tile5 a { /*Red A700*/
+        color: white !important;
+        background-color: #00BCD4 !important;
+    }
+
+        .tile5 a:hover {
+            color: white !important;
+            background-color: #006064 !important;
+        }
+
+    .tile5 div {
+        color: white !important;
+        background-color: #4DD0E1 !important;
+        cursor: not-allowed;
+    }
+
+.tile6 { /*Lime 800*/
+    color: white !important;
+    background-color: #FF5722 !important;
+}
+
+    .tile6 a { /*Red A700*/
+        color: white !important;
+        background-color: #FF5722 !important;
+    }
+
+        .tile6 a:hover {
+            color: white !important;
+            background-color: #BF360C !important;
+        }
+
+    .tile6 div {
+        color: white !important;
+        background-color: #FF8A65 !important;
+        cursor: not-allowed;
+    }
+
+.tile7 { /*Brown 500*/
+    color: white !important;
+    background-color: #795548 !important;
+}
+
+    .tile7 a { /*Red A700*/
+        color: white !important;
+        background-color: #795548 !important;
+        cursor: pointer;
+    }
+
+        .tile7 a:hover {
+            color: white !important;
+            background-color: #3E2723 !important;
+        }
+
+    .tile7 div {
+        color: white !important;
+        background-color: #A1887F !important;
+        cursor: not-allowed;
+    }
+
+.tile8 { /*Grey 500*/
+    color: white !important;
+    background-color: #9E9E9E !important;
+}
+
+    .tile8 a { /*Red A700*/
+        color: white !important;
+        background-color: #9E9E9E !important;
+    }
+
+        .tile8 a:hover {
+            color: white !important;
+            background-color: #212121 !important;
+        }
+
+    .tile8 div {
+        color: white !important;
+        background-color: #E0E0E0 !important;
+        cursor: not-allowed;
+    }
+
+.tile9 {
+    color: white !important;
+    background-color: #00c6ff !important;
+}
+
+    .tile9 a {
+        background-color: #00c6ff;
+        color: white !important;
+    }
+
+        .tile9 a:hover {
+            background-color: #1c92d2;
+            color: white !important;
+        }
+
+    .tile9 div {
+        background-color: #1c92d2;
+        color: white !important;
+        cursor: not-allowed;
+    }
+
+
+
+.tile10, .tile10 a { /*Pink 900*/
+    background: #003265 !important;
+    color: white !important;
+}
+
+    .tile10 a:hover {
+        background: #13597f !important;
+    }
+
+    .tile10 div {
+        background: #13597f;
+        cursor: not-allowed;
+    }
+
+
+.tile11, .tile11 a { /* 50 shades of grey */
+    background: #f0ca28 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile11 a:hover {
+        background: #f0ca28 !important;
+        color: white !important;
+    }
+
+    .tile11 div {
+        background: #f0ca28 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+
+    .tile13, .tile13 a { /* 50 shades of grey */
+    background: #7c3a2d !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile13 a:hover {
+        background: #7c3a2d !important;
+        color: white !important;
+    }
+
+    .tile13 div {
+        background: #7c3a2d !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile14, .tile14 a { /* 50 shades of grey */
+    background: #5f6c72 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile14 a:hover {
+        background: #5f6c72 !important;
+        color: white !important;
+    }
+
+    .tile14 div {
+        background: #5f6c72 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile15, .tile15 a { /* 50 shades of grey */
+    background: #376db6 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile15 a:hover {
+        background: #376db6 !important;
+        color: white !important;
+    }
+
+    .tile15 div {
+        background: #376db6 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile16, .tile16 a { /* 50 shades of grey */
+    background: #00363d !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile16 a:hover {
+        background: #00363d !important;
+        color: white !important;
+    }
+
+    .tile16 div {
+        background: #00363d !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile17, .tile17 a { /* 50 shades of grey */
+    background: #004851 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile17 a:hover {
+        background: #004851 !important;
+        color: white !important;
+    }
+
+    .tile17 div {
+        background: #004851 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile18, .tile18 a { /* 50 shades of grey */
+    background: #9d0a0e !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile18 a:hover {
+        background: #9d0a0e !important;
+        color: white !important;
+    }
+
+    .tile18 div {
+        background: #9d0a0e !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile19, .tile19 a { /* 50 shades of grey */
+    background: #e60000 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile19 a:hover {
+        background: #e60000 !important;
+        color: white !important;
+    }
+
+    .tile19 div {
+        background: #e60000 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile20, .tile20 a { /* 50 shades of grey */
+    background: #694d88 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile20 a:hover {
+        background: #694d88 !important;
+        color: white !important;
+    }
+
+    .tile20 div {
+        background: #694d88 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile21, .tile21 a { /* 50 shades of grey */
+    background: #00274c !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile21 a:hover {
+        background: #00274c !important;
+        color: white !important;
+    }
+
+    .tile21 div {
+        background: #00274c !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile22, .tile22 a { /* 50 shades of grey */
+    background: #51e898 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile22 a:hover {
+        background: #51e898 !important;
+        color: white !important;
+    }
+
+    .tile22 div {
+        background: #51e898 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile23, .tile23 a { /* 50 shades of grey */
+    background: #998542 !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile23 a:hover {
+        background: #998542 !important;
+        color: white !important;
+    }
+
+    .tile23 div {
+        background: #998542 !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+    .tile24, .tile24 a { /* 50 shades of grey */
+    background: #f24c7c !important;
+    color: white !important;
+    cursor: pointer;
+}
+
+    .tile24 a:hover {
+        background: #f24c7c !important;
+        color: white !important;
+    }
+
+    .tile24 div {
+        background: #f24c7c !important;
+        color: white !important;
+        cursor: not-allowed;
+    }
+
+         
+.metr {
+    width: auto;
+    padding: 5px;
+    height: auto;
+    display: table;
+}
+
+.metrostyle {
+    height: 100px;
+    width: 128px;
+    float: left;
+    margin: 0 5px 5px 0;
+    padding: 2px;
+}
+
+    .metrostyle:hover {
+        background-color: #5190d9;
+    }
+
+.metrostylelarge {
+    width: 260px;
+    height: 100px;
+}

@@ -1,0 +1,21 @@
+.dashboard {
+  
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  -o-transform: translateX(30px);
+  transform: translateX(30px);
+  
+  -webkit-animation: start 0.5s ease-out forwards;
+  -o-animation: start 0.5s ease-out forwards;
+  animation: start 0.5s ease-out forwards
+}
+
+@-webkit-keyframes start {
+  0% {
+    -webkit-transform: translateX(100px);
+  
+  }
+  100% {
+    -webkit-transform: translateX(0);   
+  }
+}
